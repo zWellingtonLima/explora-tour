@@ -1,5 +1,6 @@
 {
-  "name": "exploratour",
+  "name": "exploratour-frontend",
+  "author": "Wellington Lima",
   "private": true,
   "version": "0.0.0",
   "type": "module",
