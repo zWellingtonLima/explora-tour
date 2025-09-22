@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
+import express from "express";
+
+import statusRouter from "./routes/status.router";
 
 const app = express();
 
-app.get("/", (req: Request, res: Response) => {
-  return res.status(200).json({ chave: "Valor" });
-});
+app.use("/api/v1/status", statusRouter);
 
 export = app;
