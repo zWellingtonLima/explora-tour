@@ -16,6 +16,6 @@
     "sourceMap": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src"],
+  "include": ["src", "src/envConfig.ts"],
   "exclude": ["node_modules", "dist"]
 }

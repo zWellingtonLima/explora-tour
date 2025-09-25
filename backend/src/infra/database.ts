@@ -1,4 +1,5 @@
 import { Client, QueryConfig } from "pg";
+import { envConfig } from "../envConfig";
 
 async function query(queryObject: QueryConfig) {
   let client;
@@ -17,11 +18,11 @@ async function query(queryObject: QueryConfig) {
 
 async function getNewClient() {
   const client = new Client({
-    user: "postgres",
-    password: "local_password",
-    host: "localhost",
-    port: 5432,
-    database: "postgres",
+    user: envConfig.POSTGRES_USER,
+    password: envConfig.POSTGRES_PASSWORD,
+    host: envConfig.POSTGRES_HOST,
+    port: envConfig.POSTGRES_PORT,
+    database: envConfig.POSTGRES_DB,
   });
 
   await client.connect();

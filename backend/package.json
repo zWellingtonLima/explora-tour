@@ -8,14 +8,18 @@
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
-    "test": "vitest -w"
+    "test": "vitest -w",
+    "services:up": "docker compose -f src/compose.yaml up -d",
+    "services:down": "docker compose -f src/compose.yaml down"
   },
   "keywords": [],
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "pg": "^8.16.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
