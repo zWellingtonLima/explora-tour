@@ -1,14 +1,18 @@
-import database from "infra/database";
-
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
-    test("Should return 200 status", async () => {
+    test("Retrieving current system status", async () => {
       const response = await fetch("http://localhost:3000/api/v1/status");
-      // const responseBody = await response.json();
-
-      console.log(await database.query({ text: "SELECT 1 + 1;" }));
-
       expect(response.status).toBe(200);
+
+      const responseBody = await response.json();
+
+      const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
+      expect(parsedUpdatedAt).toEqual(responseBody.updated_at);
+
+      expect(responseBody.dependencies.database.version).toBe("17.6");
+
+      expect(responseBody.dependencies.database.max_connections).toBe(100);
+      expect(responseBody.dependencies.database.opened_connections).toBe(1);
     });
   });
 });
