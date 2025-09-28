@@ -2,7 +2,7 @@ import { Client, QueryConfig } from "pg";
 import { envConfig } from "../envConfig";
 
 async function query(queryObject: QueryConfig) {
-  let client;
+  let client: Client | null = null;
 
   try {
     client = await getNewClient();
