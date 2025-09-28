@@ -52,7 +52,7 @@ migrationsRouter.post("/", async (req: Request, res: Response) => {
 
     return res.status(200).json(migratedMigrations);
   } catch (err) {
-    console.log(err);
+    console.log("Error: ", err);
     throw err;
   } finally {
     await dbClient?.end();
