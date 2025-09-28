@@ -10,7 +10,8 @@
     "build": "tsc",
     "test": "vitest -w",
     "services:up": "docker compose -f src/compose.yaml up -d",
-    "services:down": "docker compose -f src/compose.yaml down"
+    "services:down": "docker compose -f src/compose.yaml down",
+    "migration:create": "node-pg-migrate -m src/infra/migrations create -j ts"
   },
   "keywords": [],
   "license": "ISC",
@@ -25,6 +26,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",
     "@types/pg": "^8.15.5",
+    "node-pg-migrate": "^8.0.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
