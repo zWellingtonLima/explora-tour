@@ -10,9 +10,11 @@
     "build": "tsc",
     "test": "vitest -w --no-file-parallelism",
     "services:up": "docker compose -f src/compose.yaml up -d",
+    "services:stop": "docker compose -f src/compose.yaml up stop",
     "services:down": "docker compose -f src/compose.yaml down",
     "migration:create": "node-pg-migrate -m src/infra/migrations create -j ts",
-    "migration:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up"
+    "migration:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up",
+    "services:wait-database": "node src/infra/scripts/wait-for-postgres.ts"
   },
   "keywords": [],
   "license": "ISC",
