@@ -8,10 +8,11 @@
     "dev": "tsx watch src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
-    "test": "vitest -w",
+    "test": "vitest -w --no-file-parallelism",
     "services:up": "docker compose -f src/compose.yaml up -d",
     "services:down": "docker compose -f src/compose.yaml down",
-    "migration:create": "node-pg-migrate -m src/infra/migrations create -j ts"
+    "migration:create": "node-pg-migrate -m src/infra/migrations create -j ts",
+    "migration:up": "node-pg-migrate -m src/infra/migrations --envPath .env.development up"
   },
   "keywords": [],
   "license": "ISC",
