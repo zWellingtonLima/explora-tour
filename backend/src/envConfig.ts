@@ -9,6 +9,7 @@ const EnvSchema = z.object({
   POSTGRES_DB: z.string(),
   POSTGRES_HOST: z.string(),
   POSTGRES_PORT: z.coerce.number(),
+  DATABASE_URL: z.string(),
 });
 
 export const envConfig = EnvSchema.parse(process.env);
