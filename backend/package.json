@@ -6,7 +6,9 @@
   "main": "src/server.ts",
   "scripts": {
     "server": "npm run services:up && npm run services:wait-database && tsx watch src/server.ts",
-    "test": "npm run services:wait-database && vitest watch --no-file-parallelism",
+    "test:watch": "npm run services:wait-database && vitest watch --no-file-parallelism",
+    "test": "npm run services:up && concurrently -n server,vitest -k -s command-vitest \"npm run server\" \"vitest run --no-file-parallelism\"",
+    "posttest": "npm run services:down",
     "services:up": "docker compose -f src/compose.yaml up -d",
     "services:stop": "docker compose -f src/compose.yaml up stop",
     "services:down": "docker compose -f src/compose.yaml down",
@@ -32,6 +34,7 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",
     "@types/pg": "^8.15.5",
+    "concurrently": "^9.2.1",
     "node-pg-migrate": "^8.0.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
