@@ -1,7 +1,9 @@
 {
   "name": "exploratour-backend",
   "author": "Wellington Lima",
+  "private": true,
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend Exploratour",
   "main": "src/server.ts",
   "scripts": {
@@ -34,7 +36,6 @@
     "@types/express": "^5.0.3",
     "@types/node": "^24.5.2",
     "@types/pg": "^8.15.5",
-    "concurrently": "^9.2.1",
     "node-pg-migrate": "^8.0.3",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",

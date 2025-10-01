@@ -1,8 +1,21 @@
 {
   "name": "exploratour",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "version": "1.0.0",
   "description": "Exploratour Monorepo",
   "scripts": {
+    "test": "npm --workspace backend test",
+    "lint:prettier:check:backend": "prettier --check backend",
+    "lint:prettier:write:backend": "prettier --write backend",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:write": "prettier --write .",
+    "lint:eslint:check:backend": "npx eslint backend",
+    "lint:eslint:write:backend": "npx eslint backend",
+    "lint:eslint:check": "npx eslint .",
     "prepare": "husky"
   },
   "repository": {
@@ -18,6 +31,14 @@
   "devDependencies": {
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
-    "husky": "^9.1.7"
+    "@eslint/js": "^9.36.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.36.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.45.0"
   }
 }

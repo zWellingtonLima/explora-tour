@@ -1,0 +1,21 @@
+name: Automated Tests
+
+on: pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  Vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - run: npm ci
+
+      - run: npm test
