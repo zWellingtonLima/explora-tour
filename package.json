@@ -1,9 +1,14 @@
 {
   "name": "exploratour",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "version": "1.0.0",
   "description": "Exploratour Monorepo",
   "scripts": {
-    "test": "npm --prefix backend test",
+    "test": "npm --workspace backend test",
     "lint:prettier:check:backend": "prettier --check backend",
     "lint:prettier:write:backend": "prettier --write backend",
     "lint:prettier:check": "prettier --check .",
