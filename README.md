@@ -10,11 +10,11 @@ Monorepo do projeto **Exploratour**, contendo backend (Nodejs + Express + Postgr
 exploratour/
  ├─ .husky               # Hooks de Git (commitlint)
  ├─ backend/             # API em Node.js + Express
- ├─ frontend/            # Aplicação em ReactJs   
- │   
+ ├─ frontend/            # Aplicação em ReactJs
+ │
  ├─ packages/            # Bibliotecas compartilhadas
  ├─ commitlint.config.js
- ├─ package.json         # Configurações globais 
+ ├─ package.json         # Configurações globais
  └─ README.md
 ```
 
@@ -22,11 +22,10 @@ exploratour/
 
 ## 🚀 Tecnologias Principais
 
-* **Backend:** Node.js, Express, PostgreSQL, node-pg-migrate
-* **Frontend:** Next.js (React)
-* **Testes:** Vitest
-* **Padronização:** ESLint, Prettier, Commitlint (conventional commits)
-
+- **Backend:** Node.js, Express, PostgreSQL, node-pg-migrate
+- **Frontend:** Next.js (React)
+- **Testes:** Vitest
+- **Padronização:** ESLint, Prettier, Commitlint (conventional commits)
 
 ---
 
@@ -35,7 +34,6 @@ exploratour/
 Este projeto segue o padrão **[Conventional Commits](https://www.conventionalcommits.org/)**.
 
 O **commitlint** está configurado para validar mensagens automaticamente via **husky**.
-
 
 ---
 
