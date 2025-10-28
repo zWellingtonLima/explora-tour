@@ -51,14 +51,13 @@ small {
 
 /* Links */
 a {
-  color: #1e88e5;
+  /* color: #1e88e5; */
   text-decoration: none;
-  transition: color 0.2s ease;
-}
+  font-size: 0.9rem;
 
-a:hover {
-  color: #1565c0;
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 /* Exemplo de classes utilitárias */
@@ -67,6 +66,10 @@ a:hover {
   font-family: var(--font-heading);
   font-weight: 900;
   font-size: 2rem;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
 .lead {
