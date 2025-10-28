@@ -4,7 +4,7 @@ function updateManifest(e: MediaQueryList | MediaQueryListEvent) {
     : "/manifest-light.json";
 
   let link = document.querySelector(
-    'link[rel="manifest"]'
+    'link[rel="manifest"]',
   ) as HTMLLinkElement | null;
 
   if (!link) {
