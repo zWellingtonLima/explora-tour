@@ -1,0 +1,85 @@
+/* Import das fontes */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700;900&display=swap");
+
+/* Base Typography */
+:root {
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Poppins", sans-serif;
+}
+
+/* Corpo do texto */
+body {
+  font-family: var(--font-body);
+}
+
+/* Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  line-height: 1.2;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Parágrafos e pequenos textos */
+p {
+  margin-bottom: 1em;
+}
+
+small {
+  font-size: 0.875rem;
+  color: #555;
+}
+
+/* Links */
+a {
+  /* color: #1e88e5; */
+  text-decoration: none;
+  font-size: 0.9rem;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Exemplo de classes utilitárias */
+.logo {
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 2rem;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.subtitle {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-style: italic;
+  opacity: 0.85;
+}
