@@ -48,8 +48,11 @@ export function SearchForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleSearchSubmit)} className="w-full">
-      <FieldGroup className="border-1 p-8 rounded-4xl mt-6 bg-white shadow-md">
+    <form
+      onSubmit={handleSubmit(handleSearchSubmit)}
+      className="relative z-10 mt-10 w-full"
+    >
+      <FieldGroup className="rounded-4xl border-1 bg-white px-8 py-6 shadow-md">
         <Controller
           name="destination"
           control={control}
@@ -63,6 +66,7 @@ export function SearchForm() {
                 autoComplete="off"
                 value={field.value}
                 onChange={field.onChange}
+                className="border-0 border-b border-primary"
               />
             </Field>
           )}
@@ -70,7 +74,10 @@ export function SearchForm() {
 
         <Popover>
           <PopoverTrigger asChild aria-label="Selecione a data da viagem">
-            <Button variant={"outline"} className="min-w-44">
+            <Button
+              variant={"outline"}
+              className="min-w-44 border-0 border-b border-primary"
+            >
               {formatDateString}
               <CalendarIcon className="size-4" />
             </Button>
@@ -104,7 +111,7 @@ export function SearchForm() {
         </Button>
       </FieldGroup>
       {formIsInvalid && (
-        <Item className="px-8 mx-auto max-w-4xl" aria-label={errorMessage}>
+        <Item className="mx-auto max-w-4xl px-8" aria-label={errorMessage}>
           <ItemContent className="flex-row">
             <ShieldAlertIcon className="text-gray-400" />
             <ItemDescription>{errorMessage}</ItemDescription>
