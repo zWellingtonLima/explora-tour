@@ -1,10 +1,10 @@
 export function Header() {
   return (
-    <header className="flex justify-between items-center gap-2 py-4  border-b-2 border-blue-100">
+    <header className="flex items-center justify-between gap-2 border-b-2 border-blue-100 py-4">
       <div>
         <a
           href="/"
-          className="flex logo gap-1"
+          className="logo flex gap-1"
           aria-label="Link para carregar a página principal"
         >
           <img
