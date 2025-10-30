@@ -1,19 +1,5 @@
-import {
-  CalendarClockIcon,
-  GlobeIcon,
-  MapPinCheckIcon,
-  WalletIcon,
-} from "lucide-react";
-
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
 import img from "@/assets/us.jpg";
+import { InfoCardArea } from "./InfoCardArea";
 
 export function WhyUs() {
   return (
@@ -35,65 +21,10 @@ export function WhyUs() {
 
         <article className="flex min-w-md flex-col gap-4">
           <h3 className="mb-8 text-2xl text-gray-800">
-            Poucos cliques para você
+            Apenas alguns cliques te separam de sua viagem
           </h3>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Busque sua exploração</CardTitle>
-              <CardAction>
-                <MapPinCheckIcon />
-              </CardAction>
-              <CardDescription className="text-gray-800">
-                Pesquise diferentes cidades e descubra qual destino combina mais
-                com o tipo de viagem que você procura — seja descanso, aventura
-                ou cultura.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Reserve sua passagem</CardTitle>
-              <CardAction>
-                <CalendarClockIcon />
-              </CardAction>
-              <CardDescription className="text-gray-800">
-                Compare preços e horários entre companhias, e reserve suas
-                passagens com antecedência para garantir o melhor
-                custo-benefício.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Faça o pagamento</CardTitle>
-              <CardAction>
-                <WalletIcon />
-              </CardAction>
-              <CardDescription className="text-gray-800">
-                Escolha a forma de pagamento que preferir e finalize sua compra
-                com segurança, sem taxas escondidas ou complicações.
-              </CardDescription>
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                Divirta-se e <span className="text-primary">Explore</span>
-              </CardTitle>
-              <CardAction>
-                <GlobeIcon />
-              </CardAction>
-              <CardDescription className="text-gray-800">
-                Veja o que há para fazer, conheça os principais pontos
-                turísticos e descubra opções locais para que tenha uma
-                experiência única e inesquecível.
-              </CardDescription>
-            </CardHeader>
-          </Card>
+          <InfoCardArea />
         </article>
       </div>
     </section>
