@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { SearchForm } from "@/components/SearchForm";
 import { WhyUs } from "@/components/WhyUs";
+import { FAQ } from "@/components/FAQ";
+import { JoinUs } from "@/components/JoinUs";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -17,6 +19,8 @@ function Home() {
         <SearchForm />
         <HeroSection />
         <WhyUs />
+        <FAQ />
+        <JoinUs />
       </main>
     </div>
   );

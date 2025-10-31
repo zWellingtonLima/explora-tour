@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 
 export function WhyUs() {
   return (
-    <section className="mx-auto py-28 text-center">
+    <section className="mx-auto pt-28 pb-20 text-center">
       <h2 className="text-3xl">Como a ExploraTour funciona </h2>
       <p className="text-gray-700">
         Não espere pelo amanhã, busque sua próxima aventura com a ExploraTour.

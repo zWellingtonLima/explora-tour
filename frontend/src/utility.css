@@ -44,6 +44,10 @@ a {
   }
 }
 
+.bg-pattern {
+  background-image: var(--line-pattern);
+}
+
 .f-heading {
   font-family: var(--font-heading);
 }
