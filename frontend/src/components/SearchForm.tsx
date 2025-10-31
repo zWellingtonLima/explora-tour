@@ -50,7 +50,7 @@ export function SearchForm() {
   return (
     <form
       onSubmit={handleSubmit(handleSearchSubmit)}
-      className="relative z-10 mt-10 w-full"
+      className="relative z-20 mt-10 w-full"
     >
       <FieldGroup className="rounded-4xl border-1 bg-white px-8 py-6 shadow-md">
         <Controller
@@ -78,8 +78,8 @@ export function SearchForm() {
               variant={"outline"}
               className="min-w-44 border-0 border-b border-primary"
             >
-              {formatDateString}
               <CalendarIcon className="size-4" />
+              {formatDateString}
             </Button>
           </PopoverTrigger>
 
