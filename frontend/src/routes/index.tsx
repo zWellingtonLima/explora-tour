@@ -6,6 +6,7 @@ import { SearchForm } from "@/components/SearchForm";
 import { WhyUs } from "@/components/WhyUs";
 import { FAQ } from "@/components/FAQ";
 import { JoinUs } from "@/components/JoinUs";
+import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -21,6 +22,7 @@ function Home() {
         <WhyUs />
         <FAQ />
         <JoinUs />
+        <Footer />
       </main>
     </div>
   );
