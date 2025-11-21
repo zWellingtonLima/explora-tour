@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import getMigrations from "models/getMigrations";
+import getMigrations from "models/getMigrations.ts";
 
 const getMigrationsController = async (req: Request, res: Response) => {
   const pendingMigrations = await getMigrations(true);
@@ -18,4 +18,4 @@ const postMigrationsController = async (req: Request, res: Response) => {
   return res.status(200).json(migratedMigrations);
 };
 
-export = { getMigrationsController, postMigrationsController };
+export default { getMigrationsController, postMigrationsController };
