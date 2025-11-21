@@ -1,6 +1,7 @@
 {
   "name": "exploratour-backend",
   "author": "Wellington Lima",
+  "type": "module",
   "private": true,
   "version": "1.0.0",
   "description": "Backend Exploratour",

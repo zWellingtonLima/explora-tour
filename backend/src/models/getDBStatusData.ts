@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import database from "infra/database";
+import database from "infra/database.ts";
 
 const GetStatusControllerSchema = z.object({
   updated_at: z.string().refine((v) => !isNaN(Date.parse(v)), {
@@ -59,4 +59,4 @@ const getStatusData = async (): Promise<getStatusControllerType> => {
   }
 };
 
-export = getStatusData;
+export default getStatusData;
