@@ -9,6 +9,8 @@
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "allowJs": false,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,

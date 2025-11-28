@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import getStatusData from "models/getDBStatusData";
+import getStatusData from "models/getDBStatusData.ts";
 
 const getStatusController = async (req: Request, res: Response) => {
   try {
@@ -15,4 +15,4 @@ const getStatusController = async (req: Request, res: Response) => {
   }
 };
 
-export = getStatusController;
+export default getStatusController;
