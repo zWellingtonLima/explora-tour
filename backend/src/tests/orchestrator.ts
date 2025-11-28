@@ -1,6 +1,6 @@
 import retry from "async-retry";
 
-import database from "infra/database";
+import database from "infra/database.ts";
 
 async function waitForAllServices() {
   await waitForServer();
