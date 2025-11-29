@@ -6,6 +6,7 @@ import database from "infra/database.ts";
 
 const BaseUserSchema = z.object({
   email: z.email(),
+  username: z.string(),
   password: z.string().min(8),
 });
 
@@ -34,11 +35,10 @@ const UserSchema = z.discriminatedUnion("user_type", [
   TravelerSchema,
 ]);
 
-// type CreateUserSchema = z.infer<typeof UserSchema>;
-
 const postUsersController = async (req: Request, res: Response) => {
   try {
     const parsedResult = UserSchema.safeParse(req.body);
+    console.log(parsedResult);
     if (!parsedResult.success) {
       return res
         .status(400)
@@ -50,12 +50,13 @@ const postUsersController = async (req: Request, res: Response) => {
 
     const query = {
       text: `
-        INSERT INTO users (user_type, email, hashed_password)
-        VALUES ($1, $2, $3)
-        RETURNING id, user_type, email, created_at
+        INSERT INTO users (user_type, username, email, hashed_password)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id, user_type, username, email, created_at
       `,
       values: [
         user.user_type,
+        user.username,
         user.email.toLocaleLowerCase().trim(),
         hashedPassword,
       ],
@@ -66,13 +67,14 @@ const postUsersController = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       id: created.id,
+      username: created.username,
       user_type: created.user_type,
       email: created.email,
       created_at: created.created_at,
     });
   } catch (err: any) {
     if (
-      err?.code === "24505" ||
+      err?.code === "23505" ||
       (err?.detail && err.detail.includes("already exists"))
     ) {
       return res.status(409).json({ error: "email_already_taken" });

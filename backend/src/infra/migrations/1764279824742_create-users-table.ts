@@ -18,6 +18,11 @@ export async function up(pgm: MigrationBuilder): Promise<void> {
       notNull: true,
     },
 
+    username: {
+      type: "text",
+      notNull: true,
+    },
+
     email: {
       type: "text",
       notNull: true,
