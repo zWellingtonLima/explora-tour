@@ -1,38 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
-import * as z from "zod";
 
 import database from "infra/database.ts";
-
-const BaseUserSchema = z.object({
-  email: z.email(),
-  username: z.string(),
-  password: z.string().min(8),
-});
-
-const TravelerSchema = BaseUserSchema.extend({
-  user_type: z.literal("traveler"),
-});
-
-const DriverSchema = BaseUserSchema.extend({
-  user_type: z.literal("driver"),
-  driver_licence: z.object({
-    number: z.string(),
-    category: z.string(),
-    expiration: z.string(),
-  }),
-  vehicle: z.object({
-    brand: z.string(),
-    model: z.string(),
-    year: z.number(),
-    licence_plate: z.string(),
-  }),
-});
-
-const UserSchema = z.discriminatedUnion("user_type", [
-  DriverSchema,
-  TravelerSchema,
-]);
+import { UserSchema } from "models/userSchema.ts";
 
 const postUsersController = async (req: Request, res: Response) => {
   try {
@@ -62,14 +32,14 @@ const postUsersController = async (req: Request, res: Response) => {
     };
 
     const result = await database.query(query);
-    const created = result.rows[0];
+    const { id, username, user_type, email, created_at } = result.rows[0];
 
     return res.status(201).json({
-      id: created.id,
-      username: created.username,
-      user_type: created.user_type,
-      email: created.email,
-      created_at: created.created_at,
+      id,
+      username,
+      user_type,
+      email,
+      created_at,
     });
   } catch (err: any) {
     if (
@@ -84,7 +54,7 @@ const postUsersController = async (req: Request, res: Response) => {
   }
 };
 
-// TODO: remove getController or change implemetation to avoid data leaking
+// TODO: remove getController or change implemetation to avoid user data leaking
 const getUsersController = async (req: Request, res: Response) => {
   const users = await database.query({ text: "SELECT * from users;" });
   return res.status(200).json(users.rows);
