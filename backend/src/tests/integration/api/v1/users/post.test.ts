@@ -32,7 +32,6 @@ describe("POST /api/v1/users", () => {
         expect(body).toHaveProperty("email", "traveler@testemail.com");
         expect(body).toHaveProperty("username", "Jesse Jacinto");
         expect(body).toHaveProperty("user_type", "traveler");
-
         expect(body).not.toHaveProperty("password");
         expect(body).not.toHaveProperty("hashed_password");
       });
