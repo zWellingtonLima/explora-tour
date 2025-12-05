@@ -1,4 +1,5 @@
 import retry from "async-retry";
+import { execSync } from "node:child_process";
 
 import database from "infra/database.ts";
 
@@ -27,9 +28,19 @@ async function clearDatabase() {
   });
 }
 
+export async function setupDatabase() {
+  console.log("DATABASE_URL:", process.env.DATABASE_URL);
+  console.log("Running migrations");
+
+  execSync("npm run migrations:up");
+
+  await database.query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
+  setupDatabase,
 };
 
 export default orchestrator;
