@@ -29,7 +29,6 @@ const DriverSchema = BaseUserSchema.extend({
   }),
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const UserSchema = z.discriminatedUnion("user_type", [
   DriverSchema,
   TravelerSchema,
@@ -38,7 +37,7 @@ const UserSchema = z.discriminatedUnion("user_type", [
 const postUsersController = async (req: Request, res: Response) => {
   try {
     const parsedResult = UserSchema.safeParse(req.body);
-    console.log(parsedResult);
+
     if (!parsedResult.success) {
       return res
         .status(400)
@@ -85,4 +84,10 @@ const postUsersController = async (req: Request, res: Response) => {
   }
 };
 
-export default postUsersController;
+// TODO: remove getController or change implemetation to avoid data leaking
+const getUsersController = async (req: Request, res: Response) => {
+  const users = await database.query({ text: "SELECT * from users;" });
+  return res.status(200).json(users.rows);
+};
+
+export { postUsersController, getUsersController };
