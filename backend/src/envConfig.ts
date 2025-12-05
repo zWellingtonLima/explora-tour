@@ -1,7 +1,9 @@
 import { z } from "zod";
 import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
 
-dotenv.config({ path: ".env.development" });
+const env = dotenv.config({ path: ".env.development" });
+dotenvExpand.expand(env);
 
 const EnvSchema = z.object({
   POSTGRES_PASSWORD: z.string(),
