@@ -28,11 +28,13 @@ async function clearDatabase() {
   });
 }
 
-export async function setupDatabase() {
+export async function setupDatabase(truncateTable: boolean) {
   console.log("Running migrations");
   execSync("npm run migrations:up");
 
-  await database.query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
+  if (truncateTable) {
+    await database.query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
+  }
 }
 
 const orchestrator = {
