@@ -7,11 +7,12 @@ import {
 
 const usersRouter = express.Router();
 
+usersRouter.get("/:id", getUsersController);
 usersRouter.post("/", postUsersController);
-usersRouter.put("/:id", (req, res) => {});
-// usersRouter.detele("/:id", (req, res) => {});
 
-// Just for testing purposes 
-usersRouter.get("/", getUsersController);
+// Allows users to modify they own data.
+// usersRouter.put("/:id", (req, res) => {});
+// Allows users delete their own accounts.
+// usersRouter.delete("/:id", (req, res) => {});
 
 export default usersRouter;
