@@ -1,9 +1,11 @@
 import database from "infra/database.ts";
 import orchestrator from "tests/orchestrator.ts";
+import { envConfig } from "envConfig.ts";
+const api_url = envConfig.BASE_API_URL;
 
 beforeAll(async () => {
+  await orchestrator.setupDatabase(true);
   await orchestrator.waitForAllServices();
-  await orchestrator.setupDatabase();
 });
 
 describe("POST /api/v1/users", () => {
@@ -16,7 +18,8 @@ describe("POST /api/v1/users", () => {
           email: "traveler@testemail.com",
           password: "travelerpassword",
         };
-        const response = await fetch("http://localhost:3000/api/v1/users", {
+
+        const response = await fetch(`${api_url}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
@@ -36,7 +39,7 @@ describe("POST /api/v1/users", () => {
         expect(body).not.toHaveProperty("hashed_password");
       });
 
-      test("A driver with vehicle and licence required", async () => {
+      test("A driver without vehicle and licence required", async () => {
         const driverWithoudRequiredInfo = {
           user_type: "driver",
           username: "Bad Driver",
@@ -44,7 +47,7 @@ describe("POST /api/v1/users", () => {
           password: "12345678",
         };
 
-        const response = await fetch("http://localhost:3000/api/v1/users", {
+        const response = await fetch(`${api_url}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(driverWithoudRequiredInfo),
@@ -63,13 +66,13 @@ describe("POST /api/v1/users", () => {
       };
 
       test("Rejects duplicate email", async () => {
-        await fetch("http://localhost:3000/api/v1/users", {
+        await fetch(`${api_url}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
         });
 
-        const response = await fetch("http://localhost:3000/api/v1/users", {
+        const response = await fetch(`${api_url}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
@@ -90,7 +93,7 @@ describe("POST /api/v1/users", () => {
           password: "secretpass123",
         };
 
-        const response = await fetch("http://localhost:3000/api/v1/users", {
+        const response = await fetch(`${api_url}/users`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(checkHashedPassUser),
