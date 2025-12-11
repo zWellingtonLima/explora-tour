@@ -1,123 +1,130 @@
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { useForm } from "@tanstack/react-form";
+import { searchTripSchema } from "@/schemas/searchTripSchema";
+
 import { CalendarIcon, ShieldAlertIcon } from "lucide-react";
 import { format } from "date-fns";
 
-import { Field, FieldError, FieldGroup } from "./ui/field";
+import { Field, FieldGroup } from "./ui/field";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Calendar } from "./ui/calendar";
-import { Item, ItemContent, ItemDescription } from "./ui/item";
-
-const formSchema = z.object({
-  destination: z
-    .string()
-    .min(2, "O destino deve conter pelo menos duas letras.")
-    .max(15, "O destino digitado está muito grande.")
-    .regex(/^[a-zA-Z]+$/, "O nome do destino não pode conter números."),
-  dateSelected: z.date({ message: "Selecione uma data." }),
-});
-
-type FormSchema = z.infer<typeof formSchema>;
+import { Item, ItemContent } from "./ui/item";
 
 export function SearchForm() {
-  const {
-    watch,
-    handleSubmit,
-    control,
-    formState: { errors, isValid, isSubmitted },
-  } = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
     defaultValues: {
       destination: "",
       dateSelected: new Date(),
     },
+    validators: {
+      onSubmit: searchTripSchema,
+    },
+    onSubmit: async ({ value }) => {
+      console.log(value);
+    },
   });
-
-  const formIsInvalid = isSubmitted && !isValid;
-  const errorMessage = errors.destination?.message;
-
-  const formatDateString = watch("dateSelected")
-    ? format(watch("dateSelected"), "dd-MM-yyyy")
-    : "Selecionar data";
-
-  const handleSearchSubmit = (data: FormSchema) => {
-    console.log(data);
-  };
 
   return (
     <form
-      onSubmit={handleSubmit(handleSearchSubmit)}
-      className="relative z-20 mt-10 w-full"
+      id="home-search-form"
+      onSubmit={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        void form.handleSubmit();
+      }}
+      className="relative z-20 mx-auto mt-10 w-full max-w-3xl"
     >
       <FieldGroup className="rounded-4xl border-1 bg-white px-8 py-6 shadow-md">
-        <Controller
+        <form.Field
           name="destination"
-          control={control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <Input
-                {...field}
-                id={field.name}
-                aria-invalid={fieldState.invalid}
-                placeholder="Insira o destino"
-                autoComplete="off"
-                value={field.value}
-                onChange={field.onChange}
-                className="border-0 border-b border-primary"
-              />
-            </Field>
-          )}
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  aria-invalid={isInvalid}
+                  autoComplete="off"
+                  placeholder="Insira o destino"
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                  className="border-0 border-b border-primary"
+                />
+              </Field>
+            );
+          }}
         />
 
-        <Popover>
-          <PopoverTrigger asChild aria-label="Selecione a data da viagem">
-            <Button
-              variant={"outline"}
-              className="min-w-44 border-0 border-b border-primary"
-            >
-              <CalendarIcon className="size-4" />
-              {formatDateString}
+        <form.Field
+          name="dateSelected"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <Popover>
+                  <PopoverTrigger
+                    asChild
+                    aria-label="Selecione a data da viagem"
+                  >
+                    <Button
+                      variant={"outline"}
+                      className="min-w-44 border-0 border-b border-primary"
+                    >
+                      <CalendarIcon className="size-4" />
+                      {format(field.state.value, "dd/MM/yyyy")}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <Calendar
+                      mode="single"
+                      selected={field.state.value}
+                      onSelect={(date) => date && field.handleChange(date)}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </Field>
+            );
+          }}
+        />
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+          children={([canSubmit, isSubmitting]) => (
+            <Button size={"lg"} type="submit" aria-disabled={!canSubmit}>
+              {isSubmitting ? "Buscando..." : "Explorar"}
             </Button>
-          </PopoverTrigger>
-
-          <PopoverContent>
-            <Controller
-              name="dateSelected"
-              control={control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Calendar
-                    id={field.name}
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    {...field}
-                  />
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </PopoverContent>
-        </Popover>
-
-        <Button size={"lg"} className="font-bold">
-          Explorar
-        </Button>
+          )}
+        />
       </FieldGroup>
-      {formIsInvalid && (
-        <Item className="mx-auto max-w-4xl px-8" aria-label={errorMessage}>
-          <ItemContent className="flex-row">
-            <ShieldAlertIcon className="text-gray-400" />
-            <ItemDescription>{errorMessage}</ItemDescription>
-          </ItemContent>
-        </Item>
-      )}
+      <form.Subscribe
+        selector={(state) => [state.errorMap]}
+        children={([errorMap]) =>
+          errorMap.onSubmit ? (
+            <Item
+              className="absolute mt-2 w-full max-w-3xl bg-white p-2 text-center text-sm text-red-600"
+              aria-label="Campos do formulário com erro"
+            >
+              <ItemContent className="flex-row justify-center">
+                <ShieldAlertIcon className="mr-2 self-center text-red-400" />
+                <ul>
+                  {errorMap.onSubmit?.destination?.map(({ message }) => {
+                    return <li>{message}</li>;
+                  })}
+                  {errorMap.onSubmit?.dateSelected?.map(({ message }) => {
+                    return <li>{message}</li>;
+                  })}
+                </ul>
+              </ItemContent>
+            </Item>
+          ) : null
+        }
+      />
     </form>
   );
 }
