@@ -14,11 +14,7 @@ export function JoinUs() {
               Explorar novos lugares nunca foi tão simples.
             </h3>
             <p>Junte-se a nós e aventure-se.</p>
-            <Button
-              variant={"outline"}
-              size="lg"
-              className="mt-4 font-bold text-primary"
-            >
+            <Button variant={"outline"} size="lg" className="mt-4 text-primary">
               Buscar aventura
             </Button>
           </div>
