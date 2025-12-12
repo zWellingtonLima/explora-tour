@@ -107,7 +107,7 @@ export function SearchForm() {
         children={([errorMap]) =>
           errorMap.onSubmit ? (
             <Item
-              className="absolute mt-2 w-full max-w-3xl bg-white p-2 text-center text-sm text-red-600"
+              className="absolute mt-1 w-full max-w-3xl rounded-3xl bg-white p-2 text-sm text-red-600"
               aria-label="Campos do formulário com erro"
             >
               <ItemContent className="flex-row justify-center">
