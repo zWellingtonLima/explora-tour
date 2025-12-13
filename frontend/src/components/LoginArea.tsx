@@ -1,29 +1,26 @@
 import { useForm } from "@tanstack/react-form";
 import { loginAreaSchema } from "@/schemas/loginAreaSchema";
 
-import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "./ui/dialog";
-import { DialogHeader } from "./ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+} from "./ui/dialog";
 import {
   Field,
-  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSet,
   FieldTitle,
 } from "./ui/field";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
-import signUp from "@/assets/signup.jpg";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { RadioGroup } from "./ui/radio-group";
+import signUp from "@/assets/signUp.jpg";
 
 export function LoginArea() {
   const form = useForm({
@@ -51,71 +48,197 @@ export function LoginArea() {
 
   return (
     <div className="flex gap-4">
-      <Dialog modal open>
+      <Dialog>
         <DialogTrigger asChild>
           <Button>Cadastrar-se</Button>
         </DialogTrigger>
-        <DialogContent className="p-0">
-          <section className="columns-2 gap-4">
+        <DialogContent className="items-center border-4 p-0">
+          <section className="columns-2">
             <div>
               <img
                 src={signUp}
                 alt="Grupo de aventureiros admirando paisagem"
-                className="h-[650px] rounded-l-lg object-cover object-left"
+                className="max-h-[650px] w-[500px] rounded-l-lg object-cover"
               />
             </div>
 
-            <DialogHeader className="p-4">
-              <DialogTitle className="text-center">Cadastrar-se</DialogTitle>
+            <div className="flex h-[650px] flex-col justify-center p-6">
+              <DialogHeader className="mb-4">
+                <DialogTitle className="text-center">
+                  Cadastrar-se
+                </DialogTitle>
+                <DialogDescription>Seja você um aventureiro ou motorista, a <span className="text-primary font-bold">Exploratour</span> te aguarda.</DialogDescription>
+              </DialogHeader>
 
-              <form
-                id="login-form-area"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  form.handleSubmit();
-                }}
-              >
-                <FieldGroup>
-                  <form.Field
-                    name="userType"
-                    children={(field) => {
-                      const isInvalid =
-                        field.state.meta.isTouched && !field.state.meta.isValid;
+              <div>
+                <form
+                  id="login-form-area"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    form.handleSubmit();
+                  }}
+                >
+                  <FieldGroup className="flex-col">
+                    <form.Field
+                      name="userType"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
 
-                      return (
-                        <Field>
-                          <FieldLegend>Escolha o tipo de usuário</FieldLegend>
-                          <RadioGroup
-                            name={field.name}
-                            value={field.state.value}
-                            onValueChange={field.handleChange}
-                          >
-                            {userTypes.map((user) => (
-                              <FieldLabel
-                                id={user.id}
-                                htmlFor={`login-form-area-${user.id}`}
-                              >
-                                <Field
-                                  orientation="responsive"
-                                  className="flex-col  border-2"
-                                  data-invalid={isInvalid}
+                        return (
+                          <Field>
+                            <FieldLabel className="text-gray-700">
+                              O que você quer ser?
+                            </FieldLabel>
+                            <RadioGroup
+                              name={field.name}
+                              value={field.state.value}
+                              onValueChange={field.handleChange}
+                              className="flex"
+                            >
+                              {userTypes.map((user) => (
+                                <FieldLabel
+                                  key={user.id}
+                                  id={user.id}
+                                  htmlFor={`login-form-area-${user.id}`}
                                 >
-                                  <FieldTitle>{user.text}</FieldTitle>
-                                </Field>
-                              </FieldLabel>
-                            ))}
-                          </RadioGroup>
+                                  <Field
+                                    orientation="horizontal"
+                                    data-invalid={isInvalid}
+                                  >
+                                    <FieldTitle>{user.text}</FieldTitle>
+                                    <RadioGroupItem
+                                      value={user.id}
+                                      id={`login-form-area-${user.id}`}
+                                      aria-invalid={isInvalid}
+                                    />
+                                  </Field>
+                                </FieldLabel>
+                              ))}
+                            </RadioGroup>
 
-                          {isInvalid && (
-                            <FieldError errors={field.state.meta.errors} />
-                          )}
-                        </Field>
-                      );
-                    }}
-                  />
-                </FieldGroup>
-              </form>
-            </DialogHeader>
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <form.Field
+                      name="username"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              className="text-gray-700"
+                              htmlFor="login-form-area-username"
+                            >
+                              Nome de usuário
+                            </FieldLabel>
+                            <Input
+                              id="login-form-area-username"
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="Digite seu nome de usuário..."
+                              autoComplete="username"
+                              className="py-6"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <form.Field
+                      name="email"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              className="text-gray-700"
+                              htmlFor="login-form-area-email"
+                            >
+                              Email
+                            </FieldLabel>
+                            <Input
+                              id="login-form-area-email"
+                              name={field.name}
+                              type="email"
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="Digite seu email..."
+                              className="py-6"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <form.Field
+                      name="password"
+                      children={(field) => {
+                        const isInvalid =
+                          field.state.meta.isTouched &&
+                          !field.state.meta.isValid;
+
+                        return (
+                          <Field data-invalid={isInvalid}>
+                            <FieldLabel
+                              className="text-gray-700"
+                              htmlFor="login-form-area-password"
+                            >
+                              Senha
+                            </FieldLabel>
+                            <Input
+                              id="login-form-area-password"
+                              type="password"
+                              name={field.name}
+                              value={field.state.value}
+                              onBlur={field.handleBlur}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              aria-invalid={isInvalid}
+                              placeholder="Digite senha..."
+                              className="py-6"
+                            />
+                            {isInvalid && (
+                              <FieldError errors={field.state.meta.errors} />
+                            )}
+                          </Field>
+                        );
+                      }}
+                    />
+
+                    <Button className="w-full">Explorar</Button>
+                  </FieldGroup>
+                </form>
+              </div>
+            </div>
           </section>
         </DialogContent>
       </Dialog>
