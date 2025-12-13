@@ -64,10 +64,12 @@ export function LoginArea() {
 
             <div className="flex h-[650px] flex-col justify-center p-6">
               <DialogHeader className="mb-4">
-                <DialogTitle className="text-center">
-                  Cadastrar-se
-                </DialogTitle>
-                <DialogDescription>Seja você um aventureiro ou motorista, a <span className="text-primary font-bold">Exploratour</span> te aguarda.</DialogDescription>
+                <DialogTitle className="text-center">Cadastrar-se</DialogTitle>
+                <DialogDescription>
+                  Seja você um aventureiro ou motorista, a{" "}
+                  <span className="font-bold text-primary">Exploratour</span> te
+                  aguarda.
+                </DialogDescription>
               </DialogHeader>
 
               <div>
@@ -223,7 +225,7 @@ export function LoginArea() {
                                 field.handleChange(e.target.value)
                               }
                               aria-invalid={isInvalid}
-                              placeholder="Digite senha..."
+                              placeholder="Digite a sua senha..."
                               className="py-6"
                             />
                             {isInvalid && (
@@ -234,7 +236,7 @@ export function LoginArea() {
                       }}
                     />
 
-                    <Button className="w-full">Explorar</Button>
+                    <Button className="w-full py-6">Explorar</Button>
                   </FieldGroup>
                 </form>
               </div>

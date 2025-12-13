@@ -114,10 +114,10 @@ export function SearchForm() {
                 <ShieldAlertIcon className="mr-2 self-center text-red-400" />
                 <ul>
                   {errorMap.onSubmit?.destination?.map(({ message }) => {
-                    return <li>{message}</li>;
+                    return <li key={message}>{message}</li>;
                   })}
                   {errorMap.onSubmit?.dateSelected?.map(({ message }) => {
-                    return <li>{message}</li>;
+                    return <li key={message}>{message}</li>;
                   })}
                 </ul>
               </ItemContent>
