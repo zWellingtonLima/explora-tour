@@ -1,14 +1,15 @@
 import database from "infra/database.ts";
 import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
-const api_url = envConfig.BASE_API_URL;
+
+const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
 beforeAll(async () => {
   await orchestrator.setupDatabase(true);
   await orchestrator.waitForAllServices();
 });
 
-describe("POST /api/v1/users", () => {
+describe("POST /api/v1", () => {
   describe("Anonymous user", () => {
     describe("Creating an user", () => {
       test("A traveler user successfully", async () => {
@@ -19,41 +20,45 @@ describe("POST /api/v1/users", () => {
           password: "travelerpassword",
         };
 
-        const response = await fetch(`${api_url}/users`, {
+        const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
         });
         expect(response.status).toBe(201);
 
-        const body = await response.json();
-        expect(Object.keys(body)).toEqual(
+        const { data } = await response.json();
+        expect(Object.keys(data)).toEqual(
           expect.arrayContaining(["id", "username", "email", "user_type"]),
         );
 
-        expect(body).toHaveProperty("id");
-        expect(body).toHaveProperty("email", "traveler@testemail.com");
-        expect(body).toHaveProperty("username", "Jesse Jacinto");
-        expect(body).toHaveProperty("user_type", "traveler");
-        expect(body).not.toHaveProperty("password");
-        expect(body).not.toHaveProperty("hashed_password");
+        expect(data).toHaveProperty("id");
+        expect(data).toHaveProperty("email", "traveler@testemail.com");
+        expect(data).toHaveProperty("username", "Jesse Jacinto");
+        expect(data).toHaveProperty("user_type", "traveler");
+        expect(data).not.toHaveProperty("password");
+        expect(data).not.toHaveProperty("hashed_password");
       });
 
-      test("A driver without vehicle and licence required", async () => {
+      test("An user_type not allowed", async () => {
         const driverWithoudRequiredInfo = {
-          user_type: "driver",
-          username: "Bad Driver",
-          email: "driver@withouthinfo.com",
-          password: "12345678",
+          user_type: "admin",
+          username: "Hacker",
+          email: "user@withouthinfo.com",
+          password: "12345678aa",
         };
 
-        const response = await fetch(`${api_url}/users`, {
+        const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(driverWithoudRequiredInfo),
         });
 
+        const body = await response.json();
+
         expect(response.status).toBe(400);
+        expect(body.error).toHaveProperty("message", "Validation error");
+        expect(body.error.details).toHaveProperty("discriminator", "user_type");
       });
     });
 
@@ -66,21 +71,21 @@ describe("POST /api/v1/users", () => {
       };
 
       test("Rejects duplicate email", async () => {
-        await fetch(`${api_url}/users`, {
+        await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
         });
 
-        const response = await fetch(`${api_url}/users`, {
+        const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
         });
 
         expect(response.status).toBe(409);
-        const body = await response.json();
-        expect(body).toEqual({ error: "email_already_taken" });
+        const { error } = await response.json();
+        expect(error.code).toEqual("EMAIL_ALREADY_REGISTERED");
       });
     });
 
@@ -93,7 +98,7 @@ describe("POST /api/v1/users", () => {
           password: "secretpass123",
         };
 
-        const response = await fetch(`${api_url}/users`, {
+        const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(checkHashedPassUser),

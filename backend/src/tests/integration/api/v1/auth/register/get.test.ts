@@ -1,0 +1,41 @@
+import orchestrator from "tests/orchestrator.ts";
+import { envConfig } from "envConfig.ts";
+const api_url = `${envConfig.BASE_API_URL}/users/1`;
+const api_create_user = "http://localhost:3000/api/v1/auth/register";
+
+beforeAll(async () => {
+  await orchestrator.setupDatabase(false);
+  await orchestrator.waitForAllServices();
+});
+
+describe("GET /api/v1/users", () => {
+  describe("Anonymous user", () => {
+    describe("Retrieving an user data", () => {
+      test("A traveler username and user_type", async () => {
+        const user = {
+          user_type: "traveler",
+          username: "Jesse Jacinto",
+          email: "traveler@testemail.com",
+          password: "travelerpassword",
+        };
+
+        await fetch(api_create_user, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        });
+
+        const response = await fetch(api_url);
+        expect(response.status).toBe(200);
+
+        const { data } = await response.json();
+
+        expect(Object.keys(data)).toEqual(
+          expect.arrayContaining(["username", "user_type"]),
+        );
+        expect(data).toHaveProperty("username", "Jesse Jacinto");
+        expect(data).toHaveProperty("user_type", "traveler");
+      });
+    });
+  });
+});

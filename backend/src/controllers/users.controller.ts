@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 
+import { EmailAlreadyExistsError } from "errors/Errors.ts";
+
 import database from "infra/database.ts";
 import {
   getHashedPassword,
@@ -49,11 +51,10 @@ const postUsersController = async (req: Request, res: Response) => {
       err?.code === "23505" ||
       (err?.detail && err.detail.includes("already exists"))
     ) {
-      return res.status(409).json({ error: "email_already_taken" });
+      throw new EmailAlreadyExistsError();
     }
 
-    console.error("PostUsersController error: ", err);
-    return res.status(500).json({ error: "internal_server_error" });
+    throw err;
   }
 };
 
@@ -67,7 +68,8 @@ const getUsersController = async (req: Request, res: Response) => {
         text: `SELECT username, user_type FROM users WHERE id=${id};`,
       })
     ).rows[0];
-    return res.status(200).json(user);
+
+    return res.status(200).json({ data: user });
   } catch (err) {
     console.error("Get users Controller error: ", err);
     return res.status(404).json({ error: "User not found" });
