@@ -1,6 +1,6 @@
 import { HeaderMenu } from "./HeaderMenu";
 import { Logo } from "./Logo";
-import { LoginArea } from "./LoginArea";
+import { SignUpArea } from "./SignUpArea";
 
 export function Header() {
   return (
@@ -9,7 +9,7 @@ export function Header() {
         <Logo />
         <HeaderMenu />
       </div>
-      <LoginArea />
+      <SignUpArea />
     </header>
   );
 }

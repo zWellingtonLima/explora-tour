@@ -13,6 +13,7 @@ const EnvSchema = z.object({
   POSTGRES_PORT: z.coerce.number(),
   DATABASE_URL: z.string(),
   BASE_API_URL: z.string(),
+  JWT_ACCESS_SECRET: z.string(),
 });
 
 export const envConfig = EnvSchema.parse(process.env);

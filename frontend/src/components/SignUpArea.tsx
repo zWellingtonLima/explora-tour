@@ -1,5 +1,10 @@
+import { useMutation } from "@tanstack/react-query";
+
 import { useForm } from "@tanstack/react-form";
-import { loginAreaSchema } from "@/schemas/loginAreaSchema";
+import {
+  signUpSchema,
+  type signUpSchemaType,
+} from "@/schemas/signUpAreaSchema";
 
 import {
   Dialog,
@@ -20,31 +25,47 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
-import signUp from "@/assets/signUp.jpg";
+import signUpBg from "@/assets/signUp.jpg";
 
-export function LoginArea() {
+const userTypes = [
+  {
+    id: "traveler",
+    text: "Viajante",
+  },
+  {
+    id: "driver",
+    text: "Motorista",
+  },
+] as const;
+
+export function SignUpArea() {
+  function registerUser(data: signUpSchemaType) {
+    return fetch("http://localhost:3000/api/v1/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+  }
+
+  const mutation = useMutation({
+    mutationFn: registerUser,
+  });
+
   const form = useForm({
     defaultValues: {
       username: "",
       password: "",
       email: "",
-      userType: "traveler",
+      user_type: "traveler",
     },
     validators: {
-      onSubmit: loginAreaSchema,
+      onSubmit: signUpSchema,
+    },
+    onSubmit: async ({ value }) => {
+      const parse = signUpSchema.parse(value);
+      mutation.mutate(parse);
     },
   });
-
-  const userTypes = [
-    {
-      id: "traveler",
-      text: "Viajante",
-    },
-    {
-      id: "driver",
-      text: "Motorista",
-    },
-  ] as const;
 
   return (
     <div className="flex gap-4">
@@ -56,7 +77,7 @@ export function LoginArea() {
           <section className="columns-2">
             <div>
               <img
-                src={signUp}
+                src={signUpBg}
                 alt="Grupo de aventureiros admirando paisagem"
                 className="max-h-[650px] w-[500px] rounded-l-lg object-cover"
               />
@@ -82,7 +103,7 @@ export function LoginArea() {
                 >
                   <FieldGroup className="flex-col">
                     <form.Field
-                      name="userType"
+                      name="user_type"
                       children={(field) => {
                         const isInvalid =
                           field.state.meta.isTouched &&
