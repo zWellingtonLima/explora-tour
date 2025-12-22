@@ -1,3 +1,4 @@
+import { Header } from "@/components/Header";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
@@ -7,7 +8,11 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <Outlet />
+      <div className="mx-auto max-w-7xl px-4">
+        <Header />
+
+        <Outlet />
+      </div>
     </>
   );
 }

@@ -1,8 +1,9 @@
-import getStatusController from "controllers/status.controller";
 import express from "express";
+
+import getStatusController from "controllers/status.controller.ts";
 
 const statusRouter = express.Router();
 
 statusRouter.get("/", getStatusController);
 
-export = statusRouter;
+export default statusRouter;

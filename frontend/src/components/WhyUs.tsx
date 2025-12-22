@@ -31,7 +31,7 @@ export function WhyUs() {
           </h3>
 
           <ClientCardArea />
-          <Button size={"lg"} className="self-end font-bold">
+          <Button size={"lg"} className="self-end">
             Buscar viagens
           </Button>
         </article>
@@ -56,7 +56,7 @@ export function WhyUs() {
           </h3>
 
           <DriverCardArea />
-          <Button size={"lg"} className="self-end font-bold">
+          <Button size={"lg"} className="self-end">
             Cadastrar suas rotas
           </Button>
         </article>

@@ -1,5 +1,5 @@
 import { Client, QueryConfig } from "pg";
-import { envConfig } from "../envConfig";
+import { envConfig } from "../envConfig.ts";
 
 async function query(queryObject: QueryConfig) {
   let client: Client | null = null;

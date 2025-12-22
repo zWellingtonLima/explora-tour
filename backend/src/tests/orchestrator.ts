@@ -1,6 +1,7 @@
 import retry from "async-retry";
+import { execSync } from "node:child_process";
 
-import database from "infra/database";
+import database from "infra/database.ts";
 
 async function waitForAllServices() {
   await waitForServer();
@@ -27,9 +28,19 @@ async function clearDatabase() {
   });
 }
 
+export async function setupDatabase(truncateTable: boolean) {
+  console.log("Running migrations");
+  execSync("npm run migrations:up");
+
+  if (truncateTable) {
+    await database.query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
+  }
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
+  setupDatabase,
 };
 
 export default orchestrator;
