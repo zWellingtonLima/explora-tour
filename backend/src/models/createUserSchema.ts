@@ -13,17 +13,21 @@ const TravelerSchema = BaseUserSchema.extend({
 
 const DriverSchema = BaseUserSchema.extend({
   user_type: z.literal("driver"),
-  driver_licence: z.object({
-    number: z.string(),
-    category: z.string(),
-    expiration: z.string(),
-  }),
-  vehicle: z.object({
-    brand: z.string(),
-    model: z.string(),
-    year: z.number(),
-    licence_plate: z.string(),
-  }),
+  driver_licence: z
+    .object({
+      number: z.string(),
+      category: z.string(),
+      expiration: z.string(),
+    })
+    .optional(),
+  vehicle: z
+    .object({
+      brand: z.string(),
+      model: z.string(),
+      year: z.number(),
+      licence_plate: z.string(),
+    })
+    .optional(),
 });
 
 const UserSchema = z.discriminatedUnion("user_type", [
