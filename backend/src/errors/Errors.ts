@@ -20,6 +20,4 @@ export class AuthError extends AppError {
   }
 }
 
-
-
 export { ValidationError, EmailAlreadyExistsError };

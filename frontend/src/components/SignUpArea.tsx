@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-
 import { useForm } from "@tanstack/react-form";
+
 import {
   signUpSchema,
   type signUpSchemaType,
@@ -26,7 +26,9 @@ import { Input } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 import signUpBg from "@/assets/signUp.jpg";
+import { envConfig } from "@/envConfig";
 
+const api_register_endpoint = envConfig.BASE_API_URL;
 const userTypes = [
   {
     id: "traveler",
@@ -40,7 +42,7 @@ const userTypes = [
 
 export function SignUpArea() {
   function registerUser(data: signUpSchemaType) {
-    return fetch("http://localhost:3000/api/v1/auth/register", {
+    return fetch(api_register_endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
