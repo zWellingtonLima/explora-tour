@@ -26,9 +26,8 @@ import { Input } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 import signUpBg from "@/assets/signUp.jpg";
-import { envConfig } from "@/envConfig";
 
-const api_register_endpoint = envConfig.BASE_API_URL;
+const api_register_endpoint = import.meta.env.BASE_API_URL;
 const userTypes = [
   {
     id: "traveler",
