@@ -1,5 +1,4 @@
 import * as z from "zod";
-import bcrypt from "bcrypt";
 
 const BaseUserSchema = z.object({
   email: z.email(),
@@ -37,8 +36,4 @@ const UserSchema = z.discriminatedUnion("user_type", [
 
 export type UserType = z.infer<typeof UserSchema>;
 
-async function getHashedPassword(userPassword: string) {
-  return await bcrypt.hash(userPassword, 10);
-}
-
-export { UserSchema, getHashedPassword };
+export default UserSchema;

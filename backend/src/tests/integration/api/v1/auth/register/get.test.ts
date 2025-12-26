@@ -14,7 +14,7 @@ describe("GET /api/v1/users", () => {
       test("A traveler username and user_type", async () => {
         const user = {
           user_type: "traveler",
-          username: "Jesse Jacinto",
+          username: "jesse jacinto",
           email: "traveler@testemail.com",
           password: "travelerpassword",
         };
@@ -33,7 +33,7 @@ describe("GET /api/v1/users", () => {
         expect(Object.keys(data)).toEqual(
           expect.arrayContaining(["username", "user_type"]),
         );
-        expect(data).toHaveProperty("username", "Jesse Jacinto");
+        expect(data).toHaveProperty("username", "jesse jacinto");
         expect(data).toHaveProperty("user_type", "traveler");
       });
     });

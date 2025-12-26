@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
 import { ValidationError, EmailAlreadyExistsError } from "errors/Errors.ts";
-import database from "infra/database.ts";
-import { UserSchema, getHashedPassword } from "models/createUserSchema.ts";
+import UserSchema from "models/createUserSchema.ts";
+import { createUser } from "models/createUser.model.ts";
 
 const registerUser = async (req: Request, res: Response) => {
   try {
@@ -13,29 +13,10 @@ const registerUser = async (req: Request, res: Response) => {
     }
 
     const user = parsedUserData.data;
-    const hashedPassword = await getHashedPassword(user.password);
 
-    const query = {
-      text: `
-        INSERT INTO users (user_type, username, email, hashed_password)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id, user_type, username, email, created_at
-      `,
-      values: [
-        user.user_type,
-        user.username,
-        user.email.toLowerCase().trim(),
-        hashedPassword,
-      ],
-    };
+    const createdUser = await createUser(user);
 
-    const { id, username, user_type, created_at, email } = (
-      await database.query(query)
-    ).rows[0];
-
-    return res
-      .status(201)
-      .json({ data: { id, username, user_type, created_at, email } });
+    return res.status(201).json({ data: createdUser });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

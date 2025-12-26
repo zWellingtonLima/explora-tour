@@ -15,7 +15,7 @@ describe("POST /api/v1", () => {
       test("A traveler user successfully", async () => {
         const user = {
           user_type: "traveler",
-          username: "Jesse Jacinto",
+          username: "jesse jacinto",
           email: "traveler@testemail.com",
           password: "travelerpassword",
         };
@@ -34,7 +34,7 @@ describe("POST /api/v1", () => {
 
         expect(data).toHaveProperty("id");
         expect(data).toHaveProperty("email", "traveler@testemail.com");
-        expect(data).toHaveProperty("username", "Jesse Jacinto");
+        expect(data).toHaveProperty("username", "jesse jacinto");
         expect(data).toHaveProperty("user_type", "traveler");
         expect(data).not.toHaveProperty("password");
         expect(data).not.toHaveProperty("hashed_password");
