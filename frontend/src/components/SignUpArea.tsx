@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 
@@ -24,10 +25,12 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { SubmitButton } from "./SubmitButton";
 
 import signUpBg from "@/assets/signUp.jpg";
 
-const api_register_endpoint = import.meta.env.BASE_API_URL;
+const api_register_endpoint = `${import.meta.env.VITE_BASE_API_URL}/auth/register`;
+
 const userTypes = [
   {
     id: "traveler",
@@ -40,16 +43,30 @@ const userTypes = [
 ] as const;
 
 export function SignUpArea() {
-  function registerUser(data: signUpSchemaType) {
-    return fetch(api_register_endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-  }
+  const [open, setOpen] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: registerUser,
+    mutationFn: async (data: signUpSchemaType) => {
+      const response = await fetch(api_register_endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const payload = await response.json().catch(() => null);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!response.ok)
+        throw payload.error ?? new Error("Registration failed!");
+
+      return payload;
+    },
+    onSuccess: () => {
+      setOpen(false);
+      form.reset();
+
+      toast.success("Conta criada com sucesso!", {
+        position: "top-center",
+      });
+    },
   });
 
   const form = useForm({
@@ -61,16 +78,57 @@ export function SignUpArea() {
     },
     validators: {
       onSubmit: signUpSchema,
+      onSubmitAsync: async ({ value }) => {
+        try {
+          await mutation.mutateAsync(value);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+          const serverError = err?.error ?? err;
+          let message =
+            serverError?.message ??
+            serverError?.error ??
+            err?.message ??
+            "Erro";
+
+          if (message === "Email already registered") {
+            message = "Este email já está cadastrado";
+          }
+
+          const field = serverError?.details?.field ?? serverError?.field;
+
+          if (field) {
+            return {
+              fields: {
+                [field]: [message],
+              },
+            };
+          }
+
+          return null;
+        }
+      },
     },
-    onSubmit: async ({ value }) => {
-      const parse = signUpSchema.parse(value);
-      mutation.mutate(parse);
+    onSubmitInvalid() {
+      const InvalidInput = document.querySelector(
+        '[aria-invalid="true"]',
+      ) as HTMLInputElement;
+
+      InvalidInput?.focus();
     },
   });
 
+  const isFormValid = useStore(form.store, (s) => s.isValid);
+  const isSubmitting = mutation.isPending;
+
   return (
     <div className="flex gap-4">
-      <Dialog>
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (mutation.isPending) return;
+          setOpen(isOpen);
+        }}
+      >
         <DialogTrigger asChild>
           <Button>Cadastrar-se</Button>
         </DialogTrigger>
@@ -215,7 +273,13 @@ export function SignUpArea() {
                               className="py-6"
                             />
                             {isInvalid && (
-                              <FieldError errors={field.state.meta.errors} />
+                              <em
+                                role="alert"
+                                className="text-sm font-normal text-destructive"
+                              >
+                                {field.state.meta.errors[0]?.message ||
+                                  field.state.meta.errors.join(", ")}
+                              </em>
                             )}
                           </Field>
                         );
@@ -258,7 +322,12 @@ export function SignUpArea() {
                       }}
                     />
 
-                    <Button className="w-full py-6">Explorar</Button>
+                    <SubmitButton
+                      loading={isSubmitting}
+                      disabled={!isFormValid || isSubmitting}
+                      label="Explorar"
+                      loadingLabel="Cadastrando..."
+                    />
                   </FieldGroup>
                 </form>
               </div>
