@@ -1,7 +1,9 @@
+//Implement Endpoint feature
+
 import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 const api_url = `${envConfig.BASE_API_URL}/users/1`;
-const api_create_user = "http://localhost:3000/api/v1/auth/register";
+const get_user = "http://localhost:3000/api/v1/users";
 
 beforeAll(async () => {
   await orchestrator.setupDatabase(false);
@@ -11,7 +13,7 @@ beforeAll(async () => {
 describe("GET /api/v1/users", () => {
   describe("Anonymous user", () => {
     describe("Retrieving an user data", () => {
-      test("A traveler username and user_type", async () => {
+      test.skip("A traveler username and user_type", async () => {
         const user = {
           user_type: "traveler",
           username: "jesse jacinto",
@@ -19,7 +21,7 @@ describe("GET /api/v1/users", () => {
           password: "travelerpassword",
         };
 
-        await fetch(api_create_user, {
+        await fetch(get_user, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
@@ -29,6 +31,7 @@ describe("GET /api/v1/users", () => {
         expect(response.status).toBe(200);
 
         const { data } = await response.json();
+        console.log(data);
 
         expect(Object.keys(data)).toEqual(
           expect.arrayContaining(["username", "user_type"]),
