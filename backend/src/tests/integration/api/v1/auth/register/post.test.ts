@@ -5,8 +5,8 @@ import { envConfig } from "envConfig.ts";
 const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
 beforeAll(async () => {
-  await orchestrator.setupDatabase(true);
   await orchestrator.waitForAllServices();
+  await orchestrator.setupDatabase(true);
 });
 
 describe("POST /api/v1", () => {

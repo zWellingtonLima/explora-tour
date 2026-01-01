@@ -6,8 +6,8 @@ const api_url = `${envConfig.BASE_API_URL}/users/1`;
 const get_user = "http://localhost:3000/api/v1/users";
 
 beforeAll(async () => {
-  await orchestrator.setupDatabase(false);
   await orchestrator.waitForAllServices();
+  await orchestrator.setupDatabase(false);
 });
 
 describe("GET /api/v1/users", () => {
