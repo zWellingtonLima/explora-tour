@@ -31,7 +31,6 @@ import { SubmitButton } from "./SubmitButton";
 import signUpBg from "@/assets/signUp.jpg";
 
 const api_register_endpoint = `${import.meta.env.VITE_BASE_API_URL}/auth/register`;
-
 const userTypes = [
   {
     id: "traveler",

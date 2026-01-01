@@ -1,18 +1,16 @@
 import { MigrationBuilder } from "node-pg-migrate";
 import type { ColumnDefinitions } from "node-pg-migrate";
 
-export const shorthands: ColumnDefinitions = {
-  id: {
-    type: "serial",
-    primaryKey: true,
-  },
-};
+export const shorthands: ColumnDefinitions = {};
 
 export async function up(pgm: MigrationBuilder): Promise<void> {
   pgm.createType("user_type", ["driver", "traveler"]);
 
   pgm.createTable("users", {
-    id: "id",
+    id: {
+      type: "char(26)",
+      primaryKey: true,
+    },
 
     user_type: {
       type: "user_type",

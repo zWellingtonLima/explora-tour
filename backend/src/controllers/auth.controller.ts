@@ -1,22 +1,12 @@
 import { Request, Response } from "express";
 
-import { ValidationError, EmailAlreadyExistsError } from "errors/Errors.ts";
-import UserSchema from "models/createUserSchema.ts";
-import { createUser } from "models/createUser.model.ts";
+import { EmailAlreadyExistsError } from "errors/Errors.ts";
+import { registerUser } from "services/register-user.service.ts";
 
-const registerUser = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
   try {
-    const parsedUserData = UserSchema.safeParse(req.body);
-
-    if (!parsedUserData.success) {
-      throw new ValidationError(parsedUserData.error.issues[0]);
-    }
-
-    const user = parsedUserData.data;
-
-    const createdUser = await createUser(user);
-
-    return res.status(201).json({ data: createdUser });
+    const user = await registerUser(req.body);
+    res.status(201).json({ data: user });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
@@ -31,4 +21,4 @@ const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-export default registerUser;
+export default register;
