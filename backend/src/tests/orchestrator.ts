@@ -1,7 +1,7 @@
 import retry from "async-retry";
 import { execSync } from "node:child_process";
 
-import database from "infra/database.ts";
+import query from "infra/database/pool.ts";
 
 async function waitForAllServices() {
   await waitForServer();
@@ -23,7 +23,7 @@ async function waitForAllServices() {
 }
 
 async function clearDatabase() {
-  await database.query({
+  await query({
     text: "drop schema public cascade; create schema public;",
   });
 }
@@ -33,7 +33,7 @@ export async function setupDatabase(truncateTable: boolean) {
   execSync("npm run migrations:up");
 
   if (truncateTable) {
-    await database.query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
+    await query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
   }
 }
 

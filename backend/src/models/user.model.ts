@@ -1,6 +1,6 @@
 import { ulid } from "ulid";
 
-import database from "infra/database.ts";
+import query from "infra/database/pool.ts";
 
 export type UserInsert = {
   username: string;
@@ -11,7 +11,7 @@ export type UserInsert = {
 };
 
 export async function createUser(data: UserInsert) {
-  const query = {
+  const insertUserQuery = {
     text: `
           INSERT INTO users (id, user_type, username, email, hashed_password, extra_data)
           VALUES ($1, $2, $3, $4, $5, $6)
@@ -27,6 +27,6 @@ export async function createUser(data: UserInsert) {
     ],
   };
 
-  const { rows } = await database.query(query);
+  const { rows } = await query(insertUserQuery);
   return rows[0];
 }

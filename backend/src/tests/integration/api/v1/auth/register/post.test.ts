@@ -1,4 +1,4 @@
-import database from "infra/database.ts";
+import query from "infra/database/pool.ts";
 import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 
@@ -106,7 +106,7 @@ describe("POST /api/v1", () => {
 
         expect(response.status).toBe(201);
 
-        const result = await database.query({
+        const result = await query({
           text: "SELECT hashed_password FROM users WHERE email = $1;",
           values: ["hash@test.com"],
         });

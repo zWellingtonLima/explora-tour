@@ -31,7 +31,6 @@ describe("GET /api/v1/users", () => {
         expect(response.status).toBe(200);
 
         const { data } = await response.json();
-        console.log(data);
 
         expect(Object.keys(data)).toEqual(
           expect.arrayContaining(["username", "user_type"]),

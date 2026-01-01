@@ -1,5 +1,5 @@
 import { Client, QueryConfig } from "pg";
-import { envConfig } from "../envConfig.ts";
+import { envConfig } from "../../envConfig.ts";
 
 async function query(queryObject: QueryConfig) {
   let client: Client | null = null;
@@ -29,9 +29,9 @@ async function getNewClient() {
   return client;
 }
 
-const database = {
+const client = {
   query,
   getNewClient,
 };
 
-export default database;
+export default client;
