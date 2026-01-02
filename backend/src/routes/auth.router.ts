@@ -1,13 +1,19 @@
 import express, { Request, Response } from "express";
 
-import registerUser from "controllers/auth.controller.ts";
+import register from "controllers/auth.controller.ts";
 
 const authRouter = express.Router();
 
-authRouter.post("/register", registerUser);
+authRouter.post("/register", register);
 
-authRouter.get("/login", (req: Request, res: Response) => {
-  return res;
+authRouter.post("/login", async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    // verify correct input
+    // check if user exists
+    // check if the password is the same the hashedPassword
+    // give them jwt token
+  } catch (err) {}
 });
 
 export default authRouter;

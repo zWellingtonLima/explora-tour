@@ -2,16 +2,16 @@ import { resolve } from "node:path";
 import { runner as migrationRunner } from "node-pg-migrate";
 import { Client } from "pg";
 
-import database from "infra/database.ts";
+import client from "infra/database/client.ts";
 
 const getMigrations = async (dryRun: boolean) => {
   let dbClient: Client | null = null;
 
   try {
-    dbClient = await database.getNewClient();
+    dbClient = await client.getNewClient();
 
     const pendingMigrations = await migrationRunner({
-      dbClient: dbClient,
+      dbClient,
       dryRun, //true
       verbose: true,
       dir: resolve("src", "infra", "migrations"),

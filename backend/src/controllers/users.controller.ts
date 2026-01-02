@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import database from "infra/database.ts";
+import database from "infra/database/client.ts";
 import { UserType } from "models/createUserSchema.ts";
 
 const getUsersController = async (req: Request, res: Response) => {

@@ -1,21 +1,21 @@
-import database from "infra/database.ts";
+import query from "infra/database/pool.ts";
 import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 
 const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
 beforeAll(async () => {
-  await orchestrator.setupDatabase(true);
   await orchestrator.waitForAllServices();
+  await orchestrator.setupDatabase(true);
 });
 
 describe("POST /api/v1", () => {
   describe("Anonymous user", () => {
     describe("Creating an user", () => {
       test("A traveler user successfully", async () => {
-        const user = {
+        const createUser = {
           user_type: "traveler",
-          username: "Jesse Jacinto",
+          username: "jesse jacinto",
           email: "traveler@testemail.com",
           password: "travelerpassword",
         };
@@ -23,21 +23,21 @@ describe("POST /api/v1", () => {
         const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user),
+          body: JSON.stringify(createUser),
         });
         expect(response.status).toBe(201);
 
-        const { data } = await response.json();
-        expect(Object.keys(data)).toEqual(
+        const { user } = await response.json();
+        expect(Object.keys(user)).toEqual(
           expect.arrayContaining(["id", "username", "email", "user_type"]),
         );
 
-        expect(data).toHaveProperty("id");
-        expect(data).toHaveProperty("email", "traveler@testemail.com");
-        expect(data).toHaveProperty("username", "Jesse Jacinto");
-        expect(data).toHaveProperty("user_type", "traveler");
-        expect(data).not.toHaveProperty("password");
-        expect(data).not.toHaveProperty("hashed_password");
+        expect(user).toHaveProperty("id");
+        expect(user).toHaveProperty("email", "traveler@testemail.com");
+        expect(user).toHaveProperty("username", "jesse jacinto");
+        expect(user).toHaveProperty("user_type", "traveler");
+        expect(user).not.toHaveProperty("password");
+        expect(user).not.toHaveProperty("hashed_password");
       });
 
       test("An user_type not allowed", async () => {
@@ -106,7 +106,7 @@ describe("POST /api/v1", () => {
 
         expect(response.status).toBe(201);
 
-        const result = await database.query({
+        const result = await query({
           text: "SELECT hashed_password FROM users WHERE email = $1;",
           values: ["hash@test.com"],
         });

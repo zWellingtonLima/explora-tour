@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import database from "infra/database.ts";
+import query from "infra/database/pool.ts";
 
 const GetStatusControllerSchema = z.object({
   updated_at: z.string().refine((v) => !isNaN(Date.parse(v)), {
@@ -21,18 +21,17 @@ const getStatusData = async (): Promise<getStatusControllerType> => {
   try {
     const updatedAt = new Date().toISOString();
 
-    const dbVersionResult = (
-      await database.query({ text: "SHOW server_version;" })
-    ).rows[0].server_version;
+    const dbVersionResult = (await query({ text: "SHOW server_version;" }))
+      .rows[0].server_version;
 
     const dbOpennedConnectionsResult = (
-      await database.query({
+      await query({
         text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname='postgres';",
       })
     ).rows[0].count;
 
     const dbMaxConnectionsResult = (
-      await database.query({ text: "SHOW max_connections;" })
+      await query({ text: "SHOW max_connections;" })
     ).rows[0].max_connections;
 
     const rawData = {
