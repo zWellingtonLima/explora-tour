@@ -7,3 +7,5 @@ export const UserResponseSchema = z.object({
   username: z.string(),
   created_at: z.date(),
 });
+
+export type UserResponseType = z.infer<typeof UserResponseSchema>;
