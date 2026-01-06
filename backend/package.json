@@ -7,8 +7,7 @@
   "description": "Backend Exploratour",
   "main": "src/server.ts",
   "scripts": {
-    "preserver": "npm run services:up && npm run services:wait-database && tsx watch src/server.ts",
-    "server": "npm run migrations:up",
+    "server": "npm run services:up && npm run services:wait-database && tsx watch src/server.ts",
     "test:watch": "npm run services:wait-database && vitest watch --no-file-parallelism",
     "test": "npm run services:up && concurrently -n server,vitest -k -s command-vitest \"npm run server\" \"vitest run --no-file-parallelism\"",
     "posttest": "npm run services:down",
