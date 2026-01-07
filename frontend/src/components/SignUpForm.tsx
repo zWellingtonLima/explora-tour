@@ -29,6 +29,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { SubmitButton } from "./SubmitButton";
 
 import signUpBg from "@/assets/signUp.jpg";
+
 const api_register_endpoint = `${import.meta.env.VITE_BASE_API_URL}/auth/register`;
 const userTypes = [
   {
@@ -152,7 +153,7 @@ export function SignUpForm() {
 
             <div>
               <form
-                id="login-form-area"
+                id="signup-form-area"
                 onSubmit={(e) => {
                   e.preventDefault();
                   form.handleSubmit();
@@ -180,7 +181,7 @@ export function SignUpForm() {
                               <FieldLabel
                                 key={user.id}
                                 id={user.id}
-                                htmlFor={`login-form-area-${user.id}`}
+                                htmlFor={`signup-form-area-${user.id}`}
                               >
                                 <Field
                                   orientation="horizontal"
@@ -189,7 +190,7 @@ export function SignUpForm() {
                                   <FieldTitle>{user.text}</FieldTitle>
                                   <RadioGroupItem
                                     value={user.id}
-                                    id={`login-form-area-${user.id}`}
+                                    id={`signup-form-area-${user.id}`}
                                     aria-invalid={isInvalid}
                                   />
                                 </Field>
@@ -215,12 +216,12 @@ export function SignUpForm() {
                         <Field data-invalid={isInvalid}>
                           <FieldLabel
                             className="text-gray-700"
-                            htmlFor="login-form-area-username"
+                            htmlFor="signup-form-area-username"
                           >
                             Nome de usuário
                           </FieldLabel>
                           <Input
-                            id="login-form-area-username"
+                            id="signup-form-area-username"
                             name={field.name}
                             value={field.state.value}
                             onBlur={field.handleBlur}
@@ -248,12 +249,12 @@ export function SignUpForm() {
                         <Field data-invalid={isInvalid}>
                           <FieldLabel
                             className="text-gray-700"
-                            htmlFor="login-form-area-email"
+                            htmlFor="signup-form-area-email"
                           >
                             Email
                           </FieldLabel>
                           <Input
-                            id="login-form-area-email"
+                            id="signup-form-area-email"
                             name={field.name}
                             type="email"
                             value={field.state.value}
@@ -287,12 +288,12 @@ export function SignUpForm() {
                         <Field data-invalid={isInvalid}>
                           <FieldLabel
                             className="text-gray-700"
-                            htmlFor="login-form-area-password"
+                            htmlFor="signup-form-area-password"
                           >
                             Senha
                           </FieldLabel>
                           <Input
-                            id="login-form-area-password"
+                            id="signup-form-area-password"
                             type="password"
                             name={field.name}
                             value={field.state.value}

@@ -1,8 +1,8 @@
 import { LoginValidationError } from "errors/Errors.ts";
-import { LoginUserSchema, LoginUserType } from "schemas/login-user.schema.ts";
+import { loginUserSchema, loginUserType } from "schemas/login-user.schema.ts";
 
-function validateCredentials(user: LoginUserType) {
-  const parsed = LoginUserSchema.safeParse(user);
+function validateCredentials(user: loginUserType) {
+  const parsed = loginUserSchema.safeParse(user);
 
   if (!parsed.success) {
     throw new LoginValidationError("Email ou senha inválidos");
