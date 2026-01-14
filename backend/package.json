@@ -19,7 +19,7 @@
     "migrations:prod": "node-pg-migrate -m src/infra/migrations up",
     "services:wait-database": "node src/infra/scripts/wait-for-postgres.ts",
     "start": "node dist/server.js",
-    "build": "tsc"
+    "build": "npm install && tsc"
   },
   "keywords": [],
   "license": "MIT",
