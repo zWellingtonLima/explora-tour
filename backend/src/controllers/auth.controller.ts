@@ -6,6 +6,8 @@ import { registerUser } from "services/register-user.service.ts";
 import { jwtGenerator } from "services/jwt-generator.service.ts";
 import validateCredentials from "services/validate-login-credentials.service.ts";
 import authenticateUser from "services/authenticate-user.service.ts";
+import jwt from "jsonwebtoken";
+import { envConfig } from "envConfig.ts";
 
 const register = async (req: Request, res: Response) => {
   try {
@@ -13,7 +15,7 @@ const register = async (req: Request, res: Response) => {
     const token = jwtGenerator(user.id!);
     const data = {
       user,
-      token,
+      accessToken: token,
     };
 
     return res.status(201).json(data);
@@ -42,4 +44,6 @@ const login = async (req: Request, res: Response) => {
   });
 };
 
-export { register, login };
+const me = async (req: Request, res: Response) => {};
+
+export { register, login, me };
