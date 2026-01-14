@@ -80,7 +80,7 @@ export function SignUpForm() {
       onSubmit: signUpSchema,
       onSubmitAsync: async ({ value }) => {
         try {
-          await mutation.mutateAsync(value);
+          await mutation.mutateAsync(value as signUpSchemaType);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
           const serverError = err?.error ?? err;
