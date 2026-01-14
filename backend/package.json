@@ -5,7 +5,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Backend Exploratour",
-  "main": "src/server.ts",
+  "main": "dist/server.js",
   "scripts": {
     "server": "npm run services:up && npm run services:wait-database && tsx watch src/server.ts",
     "test:watch": "npm run services:wait-database && vitest watch --no-file-parallelism",
@@ -16,6 +16,7 @@
     "services:down": "docker compose -f src/compose.yaml down",
     "migrations:create": "node-pg-migrate -m src/infra/migrations create -j ts",
     "migrations:up": "node-pg-migrate -m src/infra/migrations --envPath=./.env.development up",
+    "migrations:prod": "node-pg-migrate -m src/infra/migrations up",
     "services:wait-database": "node src/infra/scripts/wait-for-postgres.ts",
     "start": "node dist/server.js",
     "build": "tsc"
