@@ -6,6 +6,18 @@ class ValidationError extends AppError {
   }
 }
 
+class LoginValidationError extends AppError {
+  constructor(details: unknown) {
+    super("Login Validation error", 401, "VALIDATION ERROR", details);
+  }
+}
+
+class NotFound extends AppError {
+  constructor(details: unknown) {
+    super("Not  Found", 404, "NOT FOUND", details);
+  }
+}
+
 class EmailAlreadyExistsError extends AppError {
   constructor() {
     super("Email already registered", 409, "EMAIL_ALREADY_REGISTERED", {
@@ -20,4 +32,9 @@ export class AuthError extends AppError {
   }
 }
 
-export { ValidationError, EmailAlreadyExistsError };
+export {
+  ValidationError,
+  LoginValidationError,
+  NotFound,
+  EmailAlreadyExistsError,
+};

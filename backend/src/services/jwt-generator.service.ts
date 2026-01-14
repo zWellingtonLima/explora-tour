@@ -7,4 +7,8 @@ function jwtGenerator(userId: string) {
   });
 }
 
-export default jwtGenerator;
+function jwtVerify(token: string) {
+  return jwt.verify(token, envConfig.JWT_ACCESS_SECRET);
+}
+
+export { jwtGenerator, jwtVerify };

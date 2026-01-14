@@ -16,7 +16,7 @@
     "lint:eslint:check:backend": "npx eslint backend",
     "lint:eslint:write:backend": "npx eslint backend",
     "lint:eslint:check": "npx eslint .",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "repository": {
     "type": "git",
