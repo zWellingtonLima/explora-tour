@@ -12,7 +12,13 @@ import { errorHandler } from "middlewares/errorHandler.ts";
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://explorertour.vercel.app"],
+    credentials: true,
+  }),
+);
+
 // Security middleware by setting HTTP Headers
 app.use(helmet());
 app.use(morgan("dev")); // Log the requests
