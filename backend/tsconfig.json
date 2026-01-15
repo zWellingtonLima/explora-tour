@@ -16,8 +16,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "sourceMap": true,
-    "types": ["node", "vitest/globals"]
+    "types": ["node", "vitest/globals"],
   },
   "include": ["src", "src/envConfig.ts"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
 }
