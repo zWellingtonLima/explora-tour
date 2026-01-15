@@ -14,7 +14,6 @@ const EnvSchema = z.object({
   DATABASE_URL: z.string(),
   BASE_API_URL: z.string(),
   JWT_ACCESS_SECRET: z.string(),
-  SSL: z.boolean(),
 });
 
 export const envConfig = EnvSchema.parse(process.env);
