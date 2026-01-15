@@ -11,6 +11,7 @@ const pool = new Pool({
   max: 10,
   idleTimeoutMillis: 20000,
   connectionTimeoutMillis: 2000,
+  ssl: process.env.NODE_ENV === "production" ? true : false
 });
 
 async function query(queryObject: QueryConfig) {

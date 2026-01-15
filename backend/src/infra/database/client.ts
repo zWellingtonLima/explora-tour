@@ -23,7 +23,7 @@ async function getNewClient() {
     host: envConfig.POSTGRES_HOST,
     port: envConfig.POSTGRES_PORT,
     database: envConfig.POSTGRES_DB,
-    ssl: envConfig.SSL
+    ssl: process.env.NODE_ENV === "production" ? true : false,
   });
 
   await client.connect();
@@ -34,9 +34,5 @@ const client = {
   query,
   getNewClient,
 };
-
-const getSSL = () => {
-  
-}
 
 export default client;
