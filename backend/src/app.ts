@@ -28,6 +28,11 @@ app.use("/api/v1/migrations", migrationsRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", usersRouter);
 
+// Route for production check
+app.get("/health", (_, res) => {
+  res.json({ status: "ok" });
+});
+
 app.use(errorHandler);
 
 export default app;
