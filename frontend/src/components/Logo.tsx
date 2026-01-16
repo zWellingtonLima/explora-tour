@@ -8,11 +8,11 @@ export function Logo() {
       aria-label="Link para carregar a página principal"
     >
       <img
-        className="w-6"
+        className="w-4 md:w-5"
         src="logo.svg"
         alt="Logo de aventureiro caminhando"
       />
-      <span className="text-blue-500">ExploraTour</span>
+      <span className="text-xl md:text-2xl text-blue-500">ExploraTour</span>
     </Link>
   );
 }

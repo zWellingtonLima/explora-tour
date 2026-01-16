@@ -122,6 +122,7 @@ export function SignUpForm() {
 
   return (
     <Dialog
+      modal
       open={open}
       onOpenChange={(isOpen) => {
         if (mutation.isPending) return;
@@ -131,17 +132,17 @@ export function SignUpForm() {
       <DialogTrigger asChild>
         <Button>Cadastrar-se</Button>
       </DialogTrigger>
-      <DialogContent className="items-center border-4 p-0">
-        <section className="columns-2">
+      <DialogContent className="border-4 p-0">
+        <section className="grid grid-cols-1 items-center sm:grid-cols-2">
           <div>
             <img
               src={signUpBg}
-              alt="Grupo de aventureiros admirando paisagem"
-              className="max-h-[650px] w-[500px] rounded-l-lg object-cover"
+              alt="Aventureiros admirando paisagem de um lago entre montanhas"
+              className="hidden rounded-l-lg object-cover object-center sm:block sm:h-[750px] sm:w-[500px]"
             />
           </div>
 
-          <div className="flex h-[650px] flex-col justify-center p-6">
+          <div className="flex h-[650px] flex-col justify-center p-2 sm:p-6">
             <DialogHeader className="mb-4">
               <DialogTitle className="text-center">Cadastrar-se</DialogTitle>
               <DialogDescription>

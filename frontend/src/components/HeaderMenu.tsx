@@ -1,6 +1,6 @@
 export function HeaderMenu() {
   return (
-    <nav className="mt-2 ml-8">
+    <nav className="mt-2 ml-8 hidden md:block">
       <ul className="flex gap-4 text-gray-600">
         <li>
           <a href="/adventurer">Aventureiro</a>

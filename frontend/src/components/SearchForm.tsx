@@ -1,5 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { searchTripSchema } from "@/schemas/searchTripSchema";
+import { pt } from "react-day-picker/locale";
 
 import { CalendarIcon, ShieldAlertIcon } from "lucide-react";
 import { format } from "date-fns";
@@ -35,7 +36,10 @@ export function SearchForm() {
       }}
       className="relative z-20 mx-auto mt-10 w-full max-w-3xl"
     >
-      <FieldGroup className="rounded-4xl border-1 bg-white px-8 py-6 shadow-md">
+      <FieldGroup className="flex-col rounded-4xl border-1 bg-white px-4 py-8 shadow-md md:flex-row md:px-8 md:py-6">
+        <span className="block self-start text-neutral-600 md:hidden">
+          Busque sua viagem
+        </span>
         <form.Field
           name="destination"
           children={(field) => {
@@ -83,9 +87,12 @@ export function SearchForm() {
                   </PopoverTrigger>
                   <PopoverContent>
                     <Calendar
+                      locale={pt}
+                      fixedWeeks
                       mode="single"
                       selected={field.state.value}
                       onSelect={(date) => date && field.handleChange(date)}
+                      className="w-full"
                     />
                   </PopoverContent>
                 </Popover>
@@ -96,12 +103,18 @@ export function SearchForm() {
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button size={"lg"} type="submit" aria-disabled={!canSubmit}>
+            <Button
+              size={"lg"}
+              type="submit"
+              className="w-full md:w-auto"
+              aria-disabled={!canSubmit}
+            >
               {isSubmitting ? "Buscando..." : "Explorar"}
             </Button>
           )}
         />
       </FieldGroup>
+
       <form.Subscribe
         selector={(state) => [state.errorMap]}
         children={([errorMap]) =>
