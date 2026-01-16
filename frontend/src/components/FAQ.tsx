@@ -8,12 +8,12 @@ import {
 export function FAQ() {
   return (
     <section className="mx-auto" aria-label="Área de perguntas frequentes">
-      <h2 className="text-center text-3xl">Perguntas Frequentes</h2>
+      <h2 className="text-center text-xl md:text-3xl">Perguntas Frequentes</h2>
       <Accordion
         type="single"
         collapsible
         defaultValue="item-1"
-        className="mx-auto my-4 max-w-4xl"
+        className="mx-auto my-4 max-w-4xl text-sm md:text-base"
       >
         <AccordionItem value="item-1">
           <AccordionTrigger>1. O que é a plataforma?</AccordionTrigger>

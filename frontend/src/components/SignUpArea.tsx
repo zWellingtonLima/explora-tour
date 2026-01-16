@@ -3,7 +3,7 @@ import { SignUpForm } from "./SignUpForm";
 
 export function SignUpArea() {
   return (
-    <div className="flex gap-4">
+    <div className="hidden gap-2 sm:flex">
       <SignUpForm />
       <LoginForm />
     </div>
