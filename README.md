@@ -1,5 +1,7 @@
 # Link para a Página
-[Explorer](https://explorertour.vercel.app/)
+
+![png](./img/explorapage.png)
+[Clique aqui para ser redirecionado para a página](https://explorertour.vercel.app/)
 
 # Exploratour
 
