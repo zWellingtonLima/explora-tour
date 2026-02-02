@@ -30,3 +30,5 @@ export async function createUser(data: UserInsert) {
   const { rows } = await query(insertUserQuery);
   return rows[0];
 }
+
+export async function insertRefreshToken() {}
