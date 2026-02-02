@@ -32,6 +32,12 @@ export class AuthError extends AppError {
   }
 }
 
+export class TokenError extends AppError {
+  constructor() {
+    super("Invalid or expired token", 403, "INVALID_OR_EXPIRED_TOKEN");
+  }
+}
+
 export {
   ValidationError,
   LoginValidationError,

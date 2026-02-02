@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import { LoginValidationError } from "errors/Errors.ts";
 import { loginUserType } from "schemas/login-user.schema.ts";
 import query from "infra/database/pool.ts";
-import { jwtGenerator } from "./jwt-generator.service.ts";
+import { signAccessToken, signRefreshToken } from "./jwt.service.ts";
 
-async function authenticateUser(user: loginUserType) {
+async function loginUser(user: loginUserType) {
   const { rows } = await query({
-    text: `SELECT id, email, hashed_password FROM users WHERE email=$1 LIMIT 1`,
+    text: `SELECT id, email, token_version, hashed_password FROM users WHERE email=$1 LIMIT 1`,
     values: [user.email.toLowerCase().trim()],
   });
   const userData = rows[0];
@@ -25,7 +25,10 @@ async function authenticateUser(user: loginUserType) {
     throw new LoginValidationError("Email ou senha inválidos");
   }
 
-  return jwtGenerator(userData.id!);
+  const accessToken = signAccessToken(userData.id, userData.email);
+  const refreshToken = signRefreshToken(userData.id, userData.token_version);
+
+  return { accessToken, refreshToken };
 }
 
-export default authenticateUser;
+export default loginUser;
