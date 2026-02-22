@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const UserCoreSchema = z.object({
-  id: z.ulid().optional(),
   email: z.email(),
   username: z.string(),
   user_type: z.enum(["driver", "traveler"]),
