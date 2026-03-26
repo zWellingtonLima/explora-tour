@@ -28,11 +28,11 @@ app.use(morgan("dev")); // Log the requests
 app.use("/api/v1/auth", authRouter);
 app.use(authenticateTokenMiddleware);
 
-app.use("/test", (req, res) => {
-  return res.json(req.user)
-})
+app.use("/api/v1/test", (req, res) => {
+  return res.json(req.user);
+});
 
-app.use("/api/v1/status", statusRouter);
+app.use("/api/v1/status", authenticateTokenMiddleware, statusRouter);
 app.use("/api/v1/migrations", migrationsRouter);
 app.use("/api/v1/users", usersRouter);
 
