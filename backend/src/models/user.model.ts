@@ -1,4 +1,4 @@
-import { ulid, UUID } from "ulid";
+import { ULID, ulid } from "ulid";
 
 import query from "infra/database/pool.ts";
 
@@ -11,7 +11,7 @@ export type UserInsert = {
 };
 
 export type UserCreated = {
-  id: UUID;
+  id: ULID;
   user_type: "driver" | "traveler";
   username: string;
   email: string;

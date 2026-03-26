@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import { UUID } from "ulid";
+import { ULID } from "ulid";
 
 import { AuthError } from "errors/Errors.ts";
 import { verifyAccessToken } from "services/jwt.service.ts";
 
 export interface TokenPayload extends JwtPayload {
-  userId: UUID;
+  userId: ULID;
   userEmail: string;
   tokenVersion: number;
 }
