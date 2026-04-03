@@ -10,7 +10,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   pgadmin:
-    profiles: ["tools"]           # ← só sobe com --profile tools
+    profiles: ["tools"] # ← só sobe com --profile tools
     container_name: "pgadmin-dev"
     image: "dpage/pgadmin4:8"
     environment:
