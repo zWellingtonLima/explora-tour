@@ -1,14 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
-import { AppError, errorType } from "errors/AppError.ts";
+import { AppError } from "errors/AppError.ts";
 
-export function errorHandler(
-  err: errorType,
-  req: Request,
-  res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  next: NextFunction,
-) {
+export function errorHandler(err: unknown, _req: Request, res: Response) {
   if (err instanceof AppError) {
     return res.status(err.status).json({
       error: {
@@ -19,12 +13,11 @@ export function errorHandler(
     });
   }
 
-  console.error(err);
-
+  console.error("[Unhandled error]", err);
   return res.status(500).json({
     error: {
       code: "INTERNAL_SERVER_ERROR",
-      message: "Unexpected error occurred",
+      message: "An unexpected error occurred",
     },
   });
 }
