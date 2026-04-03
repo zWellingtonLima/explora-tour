@@ -1,17 +1,13 @@
-import express from "express";
+import { Router } from "express";
+import { authController } from "controllers/auth.controller.ts";
+import { authValidator } from "validators/auth.validator.ts";
+import { authenticateToken } from "middlewares/auth.middleware.ts";
 
-import {
-  register,
-  login,
-  refresh,
-  logout,
-} from "controllers/auth.controller.ts";
+const authRouter = Router();
 
-const authRouter = express.Router();
-
-authRouter.post("/register", register);
-authRouter.post("/login", login);
-authRouter.post("/refresh", refresh);
-authRouter.get("/logout", logout);
+authRouter.post("/register", authValidator.register, authController.register);
+authRouter.post("/login", authValidator.login, authController.login);
+authRouter.post("/refresh", authController.refresh);
+authRouter.post("/logout", authenticateToken, authController.logout);
 
 export default authRouter;

@@ -1,27 +1,24 @@
 import jwt from "jsonwebtoken";
-
 import { envConfig } from "envConfig.ts";
 import { TokenError } from "errors/Errors.ts";
 
-export interface AccessTokenPayload {
+// ─── Contratos dos payloads ───────────────────────────────────────────────────
+
+export type AccessTokenPayload = {
   userId: string;
   userEmail: string;
-}
+};
 
-export interface RefreshTokenPayload {
+export type RefreshTokenPayload = {
   userId: string;
-  token_version: number;
-}
+  tokenVersion: number;
+};
 
-function signAccessToken(userId: string, userEmail: string) {
+// ─── Access token (15 min) ────────────────────────────────────────────────────
+
+function signAccessToken(userId: string, userEmail: string): string {
   return jwt.sign({ userId, userEmail }, envConfig.JWT_ACCESS_SECRET, {
     expiresIn: 900,
-  });
-}
-
-function signRefreshToken(userId: string, token_version: number) {
-  return jwt.sign({ userId, token_version }, envConfig.JWT_REFRESH_TOKEN, {
-    expiresIn: "3d",
   });
 }
 
@@ -29,35 +26,42 @@ function verifyAccessToken(token: string): AccessTokenPayload {
   try {
     const decoded = jwt.verify(token, envConfig.JWT_ACCESS_SECRET);
     if (typeof decoded === "string") throw new TokenError();
-
     return decoded as AccessTokenPayload;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (err) {
-    throw new TokenError();
-  }
-}
-
-function verifyRefreshToken(oldToken: string): RefreshTokenPayload {
-  try {
-    const decoded = jwt.verify(oldToken, envConfig.JWT_REFRESH_TOKEN);
-
-    if (typeof decoded === "string") throw new TokenError();
-    if (
-      typeof decoded.userId !== "string" ||
-      typeof decoded.token_version !== "number"
-    ) {
-      throw new TokenError();
-    }
-
-    return decoded as RefreshTokenPayload;
   } catch {
     throw new TokenError();
   }
 }
 
-export {
+// ─── Refresh token (3 dias) ───────────────────────────────────────────────────
+
+function signRefreshToken(userId: string, tokenVersion: number): string {
+  return jwt.sign({ userId, tokenVersion }, envConfig.JWT_REFRESH_TOKEN, {
+    expiresIn: "3d",
+  });
+}
+
+function verifyRefreshToken(token: string): RefreshTokenPayload {
+  try {
+    const decoded = jwt.verify(token, envConfig.JWT_REFRESH_TOKEN);
+    if (typeof decoded === "string") throw new TokenError();
+
+    const payload = decoded as RefreshTokenPayload;
+    if (
+      typeof payload.userId !== "string" ||
+      typeof payload.tokenVersion !== "number"
+    ) {
+      throw new TokenError();
+    }
+
+    return payload;
+  } catch {
+    throw new TokenError();
+  }
+}
+
+export const jwtService = {
   signAccessToken,
-  signRefreshToken,
   verifyAccessToken,
+  signRefreshToken,
   verifyRefreshToken,
 };

@@ -1,6 +1,7 @@
-import { ULID, ulid } from "ulid";
+import { ulid } from "ulid";
 
 import query from "infra/database/pool.ts";
+import { NotFoundError } from "errors/Errors.ts";
 
 export type UserInsert = {
   username: string;
@@ -11,11 +12,12 @@ export type UserInsert = {
 };
 
 export type UserCreated = {
-  id: ULID;
+  id: string;
   user_type: "driver" | "traveler";
   username: string;
   email: string;
   created_at: Date;
+  token_version: number;
 };
 
 export type UserData = {
@@ -26,22 +28,29 @@ export type UserData = {
   token_version: number;
 };
 
+export type UserTokenData = {
+  id: string;
+  token_version: number;
+};
+
+// QUERIES
+
 async function findUserByEmail(email: string): Promise<UserData | null> {
   const { rows } = await query({
     text: `SELECT id, email, username, token_version, hashed_password
            FROM users WHERE email = $1 LIMIT 1`,
     values: [email.toLowerCase().trim()],
   });
-  return rows[0] ?? null;
+  return (rows[0] as UserData) ?? null;
 }
 
-async function findUserById(id: string) {
+async function findUserById(id: string): Promise<UserTokenData | null> {
   const { rows } = await query({
-    text: `SELECT id, email, username, token_version FROM users WHERE id = $1 LIMIT 1`,
+    text: `SELECT id, token_version FROM users WHERE id = $1 LIMIT 1`,
     values: [id],
   });
 
-  return rows[0] ?? null;
+  return (rows[0] as UserData) ?? null;
 }
 
 async function incrementTokenVersion(userId: string): Promise<number> {
@@ -50,11 +59,13 @@ async function incrementTokenVersion(userId: string): Promise<number> {
            WHERE id = $1 RETURNING token_version`,
     values: [userId],
   });
+
+  if (!rows[0]) throw new NotFoundError("User not found");
   return rows[0].token_version;
 }
 
 async function createUser(data: UserInsert): Promise<UserCreated> {
-  const insertUserQuery = {
+  const { rows } = await query({
     text: `
           INSERT INTO users (id, user_type, username, email, hashed_password, extra_data)
           VALUES ($1, $2, $3, $4, $5, $6)
@@ -66,30 +77,11 @@ async function createUser(data: UserInsert): Promise<UserCreated> {
       data.username.toLowerCase(),
       data.email.toLowerCase().trim(),
       data.hashed_password,
-      data.extra_data,
+      data.extra_data ?? {},
     ],
-  };
+  });
 
-  const { rows } = await query(insertUserQuery);
-  return rows[0];
+  return rows[0] as UserCreated;
 }
 
-async function getLoginUserData(email: string) {
-  const getUserQuery = {
-    text: `
-      SELECT id, token_version FROM users WHERE email = $1 LIMIT 1
-    `,
-    values: [email],
-  };
-
-  const { rows } = await query(getUserQuery);
-  return rows[0];
-}
-
-export {
-  findUserByEmail,
-  findUserById,
-  incrementTokenVersion,
-  createUser,
-  getLoginUserData,
-};
+export { findUserByEmail, findUserById, incrementTokenVersion, createUser };
