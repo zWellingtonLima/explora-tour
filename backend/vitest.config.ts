@@ -5,8 +5,10 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     globals: true,
-    hookTimeout: 30000,
-    environment: "node",
+    globalSetup: "src/tests/global-setup.ts",
+    setupFiles: ["src/tests/setup-file.ts"],
     include: ["src/tests/**/*.test.ts"],
+    fileParallelism: false,
+    env: { NODE_ENV: "development" },
   },
 });

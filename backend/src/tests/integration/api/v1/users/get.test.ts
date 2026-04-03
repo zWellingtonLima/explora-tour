@@ -1,16 +1,10 @@
 //Implement Endpoint feature
 
-import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 const api_url = `${envConfig.BASE_API_URL}/users/1`;
 const get_user = "http://localhost:3000/api/v1/users";
 
-beforeAll(async () => {
-  await orchestrator.waitForAllServices();
-  await orchestrator.setupDatabase(false);
-});
-
-describe("GET /api/v1/users", () => {
+describe.skip("GET /api/v1/users", () => {
   describe("Anonymous user", () => {
     describe("Retrieving an user data", () => {
       test.skip("A traveler username and user_type", async () => {

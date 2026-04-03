@@ -1,11 +1,9 @@
-import type { TokenPayload } from "services/jwt.service.ts";
-
-export {};
+import { AccessTokenPayload } from "services/jwt.service.ts";
 
 declare global {
   namespace Express {
-    export interface Request {
-      user?: TokenPayload | string ;
+    interface Request {
+      user?: AccessTokenPayload;
     }
   }
 }

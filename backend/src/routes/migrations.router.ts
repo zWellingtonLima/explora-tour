@@ -1,10 +1,10 @@
 import express from "express";
 
-import migController from "controllers/migrations.controller.ts";
+import { migrationsController } from "controllers/migrations.controller.ts";
 
 const migrationsRouter = express.Router();
 
-migrationsRouter.get("/", migController.getMigrationsController);
-migrationsRouter.post("/", migController.postMigrationsController);
+migrationsRouter.get("/", migrationsController.getMigrationsController);
+migrationsRouter.post("/", migrationsController.postMigrationsController);
 
 export default migrationsRouter;

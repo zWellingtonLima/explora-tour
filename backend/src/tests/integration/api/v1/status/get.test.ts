@@ -1,15 +1,11 @@
-import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 const api_url = `${envConfig.BASE_API_URL}/status`;
-
-beforeAll(async () => {
-  await orchestrator.waitForAllServices();
-});
 
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
     test("Retrieving current system status", async () => {
       const response = await fetch(api_url);
+
       expect(response.status).toBe(200);
 
       const responseBody = await response.json();

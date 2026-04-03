@@ -1,46 +1,83 @@
-import retry from "async-retry";
-import { execSync } from "node:child_process";
+import type { QueryResultRow } from "pg";
 
-import query from "infra/database/pool.ts";
+import client from "infra/database/client.ts";
+import { envConfig } from "envConfig.ts";
 
-async function waitForAllServices() {
-  await waitForServer();
+const api_url = envConfig.BASE_API_URL;
 
-  async function waitForServer() {
-    return retry(fetchStatusEndpoint, {
-      retries: 100,
-      maxTimeout: 1000,
-    });
+type UserCredentials = {
+  email: string;
+  password: string;
+};
 
-    async function fetchStatusEndpoint() {
-      const response = await fetch("http://localhost:3000/api/v1/status");
+type DefaultUser = UserCredentials & {
+  username: string;
+  user_type: "driver" | "traveler";
+};
 
-      if (response.status !== 200) {
-        throw Error();
-      }
-    }
+const DEFAULT_USER: DefaultUser = {
+  username: "Test User",
+  email: "test@example.com",
+  password: "password123",
+  user_type: "traveler",
+};
+
+// Registra o usuário padrão e retorna o accessToken.
+// Usar quando o teste precisa de autenticação mas não testa o fluxo de auth.
+async function getAuthToken(user: DefaultUser = DEFAULT_USER): Promise<string> {
+  const response = await fetch(`${api_url}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `getAuthToken: falhou ao registrar usuário padrão — status ${response.status}`,
+    );
   }
+
+  const { data } = await response.json();
+  return data.accessToken as string;
 }
 
-async function clearDatabase() {
-  await query({
+// Faz login com um usuário já existente no banco.
+// Usar quando o teste criou o usuário manualmente e precisa autenticar.
+async function loginAs(credentials: UserCredentials): Promise<string> {
+  const response = await fetch(`${api_url}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `loginAs: falhou ao autenticar ${credentials.email} — status ${response.status}`,
+    );
+  }
+
+  const data = await response.json();
+  return data.accessToken as string;
+}
+
+async function queryDatabase<T extends QueryResultRow = QueryResultRow>(
+  text: string,
+  values?: unknown[],
+) {
+  return client.query<T>({ text, values });
+}
+
+async function resetDatabaseWithoutMigrations() {
+  await client.query({
     text: "drop schema public cascade; create schema public;",
   });
 }
 
-export async function setupDatabase(truncateTable: boolean) {
-  console.log("Running migrations");
-  execSync("npm run migrations:up");
-
-  if (truncateTable) {
-    await query({ text: "TRUNCATE users RESTART IDENTITY CASCADE;" });
-  }
-}
-
 const orchestrator = {
-  waitForAllServices,
-  clearDatabase,
-  setupDatabase,
+  getAuthToken,
+  loginAs,
+  queryDatabase,
+  resetDatabaseWithoutMigrations,
 };
 
 export default orchestrator;
