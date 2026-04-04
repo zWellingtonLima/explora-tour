@@ -1,36 +1,45 @@
 import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
-const api_url = envConfig.BASE_API_URL;
 
-beforeAll(async () => {
-  await orchestrator.waitForAllServices();
-  await orchestrator.clearDatabase();
-});
+const api_url = `${envConfig.BASE_API_URL}/migrations`;
 
 describe("POST /api/v1/migrations", () => {
-  describe("Anonymous user", () => {
-    describe("Running pending migrations", async () => {
-      test("For the first time", async () => {
-        const response = await fetch(`${api_url}/migrations`, {
-          method: "POST",
-        });
-        expect(response.status).toBe(201);
+  let token: string;
 
-        const responseBody = await response.json();
-        expect(Array.isArray(responseBody)).toBe(true);
-        expect(responseBody.length).toBeGreaterThan(0);
+  beforeAll(async () => {
+    token = await orchestrator.getAuthToken();
+    await orchestrator.resetDatabaseWithoutMigrations();
+  });
+
+  describe("Authenticated user", () => {
+    test("Rejects unauthenticated request", async () => {
+      const response = await fetch(api_url, { method: "POST" });
+      expect(response.status).toBe(401);
+    });
+
+    test("Applies pending migrations and returns them", async () => {
+      const response = await fetch(api_url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
       });
 
-      test("For the second time", async () => {
-        const response = await fetch(`${api_url}/migrations`, {
-          method: "POST",
-        });
-        expect(response.status).toBe(200);
+      expect(response.status).toBe(201);
+      const data = await response.json();
+      expect(Array.isArray(data)).toBe(true);
+      expect(data.length).toBeGreaterThan(0);
+    });
 
-        const responseBody = await response.json();
-        expect(Array.isArray(responseBody)).toBe(true);
-        expect(responseBody.length).toBe(0);
+    test("Returns empty list when no migrations are pending", async () => {
+      // estado já tem migrations aplicadas do teste anterior
+      const response = await fetch(api_url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
       });
+
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(Array.isArray(data)).toBe(true);
+      expect(data.length).toBe(0);
     });
   });
 });

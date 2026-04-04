@@ -1,25 +1,19 @@
 import query from "infra/database/pool.ts";
-import orchestrator from "tests/orchestrator.ts";
 import { envConfig } from "envConfig.ts";
 
 const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
-beforeAll(async () => {
-  await orchestrator.waitForAllServices();
-  await orchestrator.setupDatabase(true);
-});
+const createUser = {
+  user_type: "traveler",
+  username: "Jesse Jacinto",
+  email: "traveler@testemail.com",
+  password: "travelerpassword",
+};
 
-describe("POST /api/v1", () => {
-  describe("Anonymous user", () => {
+describe("POST /api/v1/auth/register", () => {
+  describe(`User: ${createUser.username}`, () => {
     describe("Creating an user", () => {
-      test("A traveler user successfully", async () => {
-        const createUser = {
-          user_type: "traveler",
-          username: "jesse jacinto",
-          email: "traveler@testemail.com",
-          password: "travelerpassword",
-        };
-
+      test(`A "${createUser.user_type}" user successfully`, async () => {
         const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -27,17 +21,12 @@ describe("POST /api/v1", () => {
         });
         expect(response.status).toBe(201);
 
-        const { user } = await response.json();
-        expect(Object.keys(user)).toEqual(
-          expect.arrayContaining(["id", "username", "email", "user_type"]),
-        );
+        const { data } = await response.json();
 
-        expect(user).toHaveProperty("id");
-        expect(user).toHaveProperty("email", "traveler@testemail.com");
-        expect(user).toHaveProperty("username", "jesse jacinto");
-        expect(user).toHaveProperty("user_type", "traveler");
-        expect(user).not.toHaveProperty("password");
-        expect(user).not.toHaveProperty("hashed_password");
+        expect(data).toHaveProperty("accessToken");
+        expect(typeof data.accessToken).toBe("string");
+        expect(data).not.toHaveProperty("password");
+        expect(data).not.toHaveProperty("hashed_password");
       });
 
       test("An user_type not allowed", async () => {
@@ -62,7 +51,7 @@ describe("POST /api/v1", () => {
       });
     });
 
-    describe("Creating user with duplicate email", async () => {
+    describe("Creating user with duplicate email", () => {
       const user = {
         user_type: "traveler",
         username: "Someone",
@@ -85,7 +74,7 @@ describe("POST /api/v1", () => {
 
         expect(response.status).toBe(409);
         const { error } = await response.json();
-        expect(error.code).toEqual("EMAIL_ALREADY_REGISTERED");
+        expect(error.code).toEqual("CONFLICT");
       });
     });
 

@@ -1,4 +1,4 @@
-import { Pool, QueryConfig } from "pg";
+import { Pool, QueryConfig, QueryResultRow } from "pg";
 
 import { envConfig } from "envConfig.ts";
 
@@ -11,11 +11,13 @@ const pool = new Pool({
   max: 10,
   idleTimeoutMillis: 20000,
   connectionTimeoutMillis: 2000,
-  ssl: process.env.NODE_ENV === "production" ? true : false
+  ssl: process.env.NODE_ENV === "production" ? true : false,
 });
 
-async function query(queryObject: QueryConfig) {
-  return pool.query(queryObject);
+async function query<R extends QueryResultRow = QueryResultRow>(
+  queryObject: QueryConfig,
+) {
+  return pool.query<R>(queryObject);
 }
 
 export default query;

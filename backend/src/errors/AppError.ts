@@ -13,5 +13,6 @@ export class AppError extends Error {
     public readonly details?: unknown,
   ) {
     super(message);
+    Object.setPrototypeOf(this, new.target.prototype); // instanceof funciona após transpilação
   }
 }

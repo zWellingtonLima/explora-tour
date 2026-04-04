@@ -43,7 +43,7 @@ export function LoginForm() {
       form.reset();
 
       // TODO: create a hook to verify current user logged in.
-      console.log(data.token);
+      console.log(data.accessToken);
 
       toast.success("Login com sucesso!", {
         position: "top-center",

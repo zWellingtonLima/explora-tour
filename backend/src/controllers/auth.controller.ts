@@ -1,45 +1,64 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
+import { authService } from "services/auth.service.ts";
 
-import { EmailAlreadyExistsError } from "errors/Errors.ts";
+const REFRESH_COOKIE = "refreshToken";
 
-import { registerUser } from "services/register-user.service.ts";
-import { jwtGenerator } from "services/jwt-generator.service.ts";
-import validateCredentials from "services/validate-login-credentials.service.ts";
-import authenticateUser from "services/authenticate-user.service.ts";
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 3 * 24 * 60 * 60 * 1000, // 3 dias em ms
+};
 
-const register = async (req: Request, res: Response) => {
+// POST /auth/register
+async function register(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await registerUser(req.body);
-    const token = jwtGenerator(user.id!);
-    const data = {
-      user,
-      token,
-    };
-
-    return res.status(201).json(data);
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    if (
-      err?.code === "23505" ||
-      (err?.detail && err.detail.includes("already exists"))
-    ) {
-      throw new EmailAlreadyExistsError();
-    }
-
-    throw err;
+    const { accessToken, refreshToken } = await authService.register(req.body);
+    res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
+    return res.status(201).json({ data: { accessToken } });
+  } catch (err) {
+    next(err);
   }
-};
+}
 
-const login = async (req: Request, res: Response) => {
-  const user = validateCredentials(req.body);
-  const token = await authenticateUser(user);
+// POST /auth/login
+async function login(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { email, password } = req.body;
+    const { accessToken, refreshToken } = await authService.login(
+      email,
+      password,
+    );
+    res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
+    return res.json({ data: { accessToken } });
+  } catch (err) {
+    next(err);
+  }
+}
 
-  return res.status(200).json({
-    data: {
-      token,
-    },
-  });
-};
+// POST /auth/refresh
+async function refresh(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { accessToken, refreshToken } = await authService.refresh(
+      req.cookies[REFRESH_COOKIE],
+    );
+    // Rotaciona o cookie — refresh token rotation
+    res.cookie(REFRESH_COOKIE, refreshToken, COOKIE_OPTIONS);
+    return res.json({ data: accessToken });
+  } catch (err) {
+    next(err);
+  }
+}
 
-export { register, login };
+// POST /auth/logout  (rota protegida — requer access token)
+async function logout(req: Request, res: Response, next: NextFunction) {
+  try {
+    await authService.logout(req.user!.userId);
+    res.clearCookie(REFRESH_COOKIE, COOKIE_OPTIONS);
+    return res.sendStatus(204);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const authController = { register, login, refresh, logout };

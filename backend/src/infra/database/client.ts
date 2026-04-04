@@ -1,12 +1,13 @@
-import { Client, QueryConfig } from "pg";
-import { envConfig } from "../../envConfig.ts";
+import { Client, QueryConfig, QueryResultRow } from "pg";
+import { envConfig } from "envConfig.ts";
 
-async function query(queryObject: QueryConfig) {
+async function query<R extends QueryResultRow = QueryResultRow>(
+  queryObject: QueryConfig,
+) {
   let client: Client | null = null;
-
   try {
     client = await getNewClient();
-    const result = await client.query(queryObject);
+    const result = await client.query<R>(queryObject);
     return result;
   } catch (err) {
     console.log(err);

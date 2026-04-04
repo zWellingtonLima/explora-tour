@@ -18,4 +18,7 @@ const postMigrationsController = async (req: Request, res: Response) => {
   return res.status(200).json(migratedMigrations);
 };
 
-export default { getMigrationsController, postMigrationsController };
+export const migrationsController = {
+  getMigrationsController,
+  postMigrationsController,
+};
