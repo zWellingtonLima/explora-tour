@@ -1,17 +1,29 @@
 import { z } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { ValidationError } from "errors/Errors.ts";
+import { ValidationError } from "shared/errors/Errors.ts";
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
-
-const registerSchema = z.object({
+const BaseRegisterSchema = z.object({
   username: z.string().min(3).max(40),
   email: z.email(),
-  password: z.string().min(8).max(72), // bcrypt limita a 72 bytes
-  user_type: z.enum(["driver", "traveler"]),
+  password: z.string().min(8).max(72),
 });
 
-const loginSchema = z.object({
+const TravelerSchema = BaseRegisterSchema.extend({
+  user_type: z.literal("traveler"),
+});
+
+const DriverSchema = BaseRegisterSchema.extend({
+  user_type: z.literal("driver"),
+  // campos de driver entram aqui quando forem obrigatórios
+});
+
+export const registerSchema = z.discriminatedUnion("user_type", [
+  TravelerSchema,
+  DriverSchema,
+]);
+
+export const loginSchema = z.object({
   email: z.email(),
   password: z.string().min(1),
 });

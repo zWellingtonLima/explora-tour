@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { envConfig } from "envConfig.ts";
-import { TokenError } from "errors/Errors.ts";
+import { envConfig } from "config/env.ts";
+import { TokenError } from "shared/errors/Errors.ts";
 
 // ─── Contratos dos payloads ───────────────────────────────────────────────────
 

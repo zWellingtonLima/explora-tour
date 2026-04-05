@@ -1,24 +1,14 @@
-import { userRepository } from "repositories/user.repository.ts";
-import { passwordService } from "services/password.service.ts";
-import { jwtService } from "services/jwt.service.ts";
+import { userRepository } from "modules/users/user.repository.ts";
+import { passwordService } from "modules/auth/password.service.ts";
+import { jwtService } from "infra/http/jwt.service.ts";
+
+import { AuthTokens, RegisterInput } from "./auth.types.ts";
 import {
-  LoginError,
-  ConflictError,
   AuthError,
+  ConflictError,
+  LoginError,
   TokenError,
-} from "errors/Errors.ts";
-
-export type RegisterInput = {
-  username: string;
-  email: string;
-  password: string;
-  user_type: "driver" | "traveler";
-};
-
-export type AuthTokens = {
-  accessToken: string;
-  refreshToken: string;
-};
+} from "shared/errors/Errors.ts";
 
 // ─── Registrar ──────────────────────────────────────────────────────────────────
 
