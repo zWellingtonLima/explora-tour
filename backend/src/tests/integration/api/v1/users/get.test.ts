@@ -1,6 +1,4 @@
-//Implement Endpoint feature
-
-import { envConfig } from "envConfig.ts";
+import { envConfig } from "config/env.ts";
 const api_url = `${envConfig.BASE_API_URL}/users/1`;
 const get_user = "http://localhost:3000/api/v1/users";
 

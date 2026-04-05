@@ -1,6 +1,6 @@
 import retry from "async-retry";
 import { execSync } from "node:child_process";
-import { envConfig } from "envConfig.ts";
+import { envConfig } from "config/env.ts";
 
 export async function setup() {
   await waitForServer();

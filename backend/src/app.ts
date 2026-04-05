@@ -3,19 +3,15 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
-import { errorHandler } from "middlewares/errorHandler.ts";
-import { authenticateToken } from "middlewares/auth.middleware.ts";
-import authRouter from "routes/auth.router.ts";
-import usersRouter from "routes/users.router.ts";
-import statusRouter from "routes/status.router.ts";
-import migrationsRouter from "routes/migrations.router.ts";
+import { errorHandler } from "infra/http/middlewares/errorHandler.ts";
+import router from "infra/http/router.ts";
+import corsOptions from "config/cors.ts";
 
 const app = express();
 
 app.use(express.json());
 app.use(cookieParser()); // req.cookies para o refresh token
-app.use(cors({ credentials: true })); // credentials: true → cookies cross-origin
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan("dev"));
 

@@ -1,5 +1,5 @@
 import query from "infra/database/pool.ts";
-import { envConfig } from "envConfig.ts";
+import { envConfig } from "config/env.ts";
 
 const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
