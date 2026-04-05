@@ -4,21 +4,21 @@ import { ValidationError } from "shared/errors/Errors.ts";
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
 const BaseRegisterSchema = z.object({
-  username: z.string().min(3).max(40),
+  name: z.string().min(3).max(40),
   email: z.email(),
   password: z.string().min(8).max(72),
 });
 
 const TravelerSchema = BaseRegisterSchema.extend({
-  user_type: z.literal("traveler"),
+  role: z.literal("traveler"),
 });
 
 const DriverSchema = BaseRegisterSchema.extend({
-  user_type: z.literal("driver"),
+  role: z.literal("driver"),
   // campos de driver entram aqui quando forem obrigatórios
 });
 
-export const registerSchema = z.discriminatedUnion("user_type", [
+export const registerSchema = z.discriminatedUnion("role", [
   TravelerSchema,
   DriverSchema,
 ]);

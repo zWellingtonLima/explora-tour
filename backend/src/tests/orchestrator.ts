@@ -11,15 +11,15 @@ type UserCredentials = {
 };
 
 type DefaultUser = UserCredentials & {
-  username: string;
-  user_type: "driver" | "traveler";
+  name: string;
+  role: "driver" | "traveler";
 };
 
 const DEFAULT_USER: DefaultUser = {
-  username: "Test User",
+  name: "Test User",
   email: "test@example.com",
   password: "password123",
-  user_type: "traveler",
+  role: "traveler",
 };
 
 // Registra o usuário padrão e retorna o accessToken.

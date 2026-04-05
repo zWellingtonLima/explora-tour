@@ -9,7 +9,7 @@
 //   try {
 //     const user: UserType = (
 //       await database.query({
-//         text: `SELECT username, user_type FROM users WHERE id=${id};`,
+//         text: `SELECT name, role FROM users WHERE id=${id};`,
 //       })
 //     ).rows[0];
 

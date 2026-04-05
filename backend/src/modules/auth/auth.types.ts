@@ -1,8 +1,8 @@
 export type RegisterInput = {
-  username: string;
+  name: string;
   email: string;
   password: string;
-  user_type: "driver" | "traveler";
+  role: "driver" | "traveler";
 };
 
 export type AuthTokens = {

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const BaseUser = z.object({
   email: z.email("Email inválido"),
-  username: z
+  name: z
     .string()
     .min(3, "Escreva um nome de usuário com pelo menos 3 letras")
     .max(20, "Seu nome de usuário está muito grande."),
@@ -10,11 +10,11 @@ const BaseUser = z.object({
 });
 
 const TravelerSchema = BaseUser.extend({
-  user_type: z.literal("traveler"),
+  role: z.literal("traveler"),
 });
 
 const DriverSchema = BaseUser.extend({
-  user_type: z.literal("driver"),
+  role: z.literal("driver"),
 }).extend({
   driver_licence: z
     .object({

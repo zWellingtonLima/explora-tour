@@ -16,13 +16,13 @@ async function register(input: RegisterInput): Promise<AuthTokens> {
   const existing = await userRepository.findByEmail(input.email);
   if (existing) throw new ConflictError("email");
 
-  const hashed_password = await passwordService.hash(input.password);
+  const password_hash = await passwordService.hash(input.password);
 
   const user = await userRepository.create({
-    username: input.username,
+    name: input.name,
     email: input.email,
-    hashed_password,
-    user_type: input.user_type,
+    password_hash,
+    role: input.role,
   });
 
   // Emite tokens imediatamente — sem precisar de login separado
@@ -41,7 +41,7 @@ async function login(email: string, password: string): Promise<AuthTokens> {
     throw new LoginError();
   }
 
-  const valid = await passwordService.compare(password, user.hashed_password);
+  const valid = await passwordService.compare(password, user.password_hash);
   if (!valid) throw new LoginError();
 
   return buildTokens(user.id, user.email, user.token_version);
