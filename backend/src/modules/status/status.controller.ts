@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import getStatusData from "models/getDBStatusData.ts";
+import getStatusData from "modules/status/status.service.ts";
 
 const getStatusController = async (req: Request, res: Response) => {
   try {

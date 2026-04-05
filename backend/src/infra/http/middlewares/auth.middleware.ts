@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
-import { jwtService } from "services/jwt.service.ts";
-import { AuthError } from "errors/Errors.ts";
+import { jwtService } from "infra/http/jwt.service.ts";
+import { AuthError } from "shared/errors/Errors.ts";
 
 function authenticateToken(req: Request, _res: Response, next: NextFunction) {
   try {

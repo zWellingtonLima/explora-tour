@@ -1,6 +1,6 @@
 import { Pool, QueryConfig, QueryResultRow } from "pg";
 
-import { envConfig } from "envConfig.ts";
+import { envConfig } from "config/env.ts";
 
 const pool = new Pool({
   user: envConfig.POSTGRES_USER,

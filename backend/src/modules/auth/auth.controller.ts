@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { authService } from "services/auth.service.ts";
+import { authService } from "modules/auth/auth.service.ts";
 
 const REFRESH_COOKIE = "refreshToken";
 

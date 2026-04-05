@@ -1,27 +1,14 @@
 import { ulid } from "ulid";
 import query from "infra/database/pool.ts";
 
-// ─── Tipos de domínio ─────────────────────────────────────────────────────────
-
-export type UserRow = {
-  id: string;
-  email: string;
-  username: string;
-  hashed_password: string;
-  token_version: number;
-};
-
-export type UserPublicRow = Omit<UserRow, "hashed_password">;
-
-export type CreateUserInput = {
-  username: string;
-  email: string;
-  hashed_password: string;
-  user_type: "driver" | "traveler";
-  extra_data?: Record<string, unknown>;
-};
-
-// ─── Queries ──────────────────────────────────────────────────────────────────
+import { NotFoundError } from "shared/errors/Errors.ts";
+import {
+  CreateUserInput,
+  PublicUser,
+  UserAuthRow,
+  UserCreatedRow,
+  UserRow,
+} from "./user.types.ts";
 
 async function findByEmail(email: string): Promise<UserRow | null> {
   const { rows } = await query({
@@ -32,16 +19,26 @@ async function findByEmail(email: string): Promise<UserRow | null> {
   return (rows[0] as UserRow) ?? null;
 }
 
-async function findById(id: string): Promise<UserPublicRow | null> {
+async function findById(id: string): Promise<UserAuthRow | null> {
   const { rows } = await query({
     text: `SELECT id, email, username, token_version
            FROM users WHERE id = $1 LIMIT 1`,
     values: [id],
   });
-  return (rows[0] as UserPublicRow) ?? null;
+  return (rows[0] as UserAuthRow) ?? null;
 }
 
-async function create(data: CreateUserInput): Promise<UserPublicRow> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function findPublicById(id: string): Promise<PublicUser | null> {
+  const { rows } = await query({
+    text: `SELECT id, email, username, user_type
+           FROM users WHERE id = $1 LIMIT 1`,
+    values: [id],
+  });
+  return (rows[0] as PublicUser) ?? null;
+}
+
+async function create(data: CreateUserInput): Promise<UserCreatedRow> {
   const { rows } = await query({
     text: `INSERT INTO users (id, user_type, username, email, hashed_password, extra_data)
            VALUES ($1, $2, $3, $4, $5, $6)
@@ -55,7 +52,7 @@ async function create(data: CreateUserInput): Promise<UserPublicRow> {
       data.extra_data ?? {},
     ],
   });
-  return rows[0] as UserPublicRow;
+  return rows[0] as UserCreatedRow;
 }
 
 async function incrementTokenVersion(userId: string): Promise<number> {
@@ -64,8 +61,7 @@ async function incrementTokenVersion(userId: string): Promise<number> {
            WHERE id = $1 RETURNING token_version`,
     values: [userId],
   });
-  if (!rows[0])
-    throw new Error(`User ${userId} not found during token invalidation`);
+  if (!rows[0]) throw new NotFoundError("User");
   return rows[0].token_version;
 }
 

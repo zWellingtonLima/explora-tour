@@ -1,12 +1,20 @@
-// Add production routes
-const whitelist = ["http://localhost:5173"];
-const corsOptions = {
-  origin: function (origin: string, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
+import { CorsOptions } from "cors";
+import { envConfig } from "config/env.ts";
+
+const whitelist = envConfig.ALLOWED_ORIGINS.split(",").map((o) => o.trim());
+
+const corsOptions: CorsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    // permite requisições sem Origin (Postman, server-to-server, testes)
+    if (!origin) return callback(null, true);
+
+    if (whitelist.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("CORS not Allowed."));
+      callback(new Error(`CORS: origin '${origin}' not allowed`));
     }
   },
 };
+
 export default corsOptions;
