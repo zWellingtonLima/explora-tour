@@ -5,10 +5,10 @@ const get_user = "http://localhost:3000/api/v1/users";
 describe.skip("GET /api/v1/users", () => {
   describe("Anonymous user", () => {
     describe("Retrieving an user data", () => {
-      test.skip("A traveler username and user_type", async () => {
+      test.skip("A traveler name and role", async () => {
         const user = {
-          user_type: "traveler",
-          username: "jesse jacinto",
+          role: "traveler",
+          name: "jesse jacinto",
           email: "traveler@testemail.com",
           password: "travelerpassword",
         };
@@ -25,10 +25,10 @@ describe.skip("GET /api/v1/users", () => {
         const { data } = await response.json();
 
         expect(Object.keys(data)).toEqual(
-          expect.arrayContaining(["username", "user_type"]),
+          expect.arrayContaining(["name", "role"]),
         );
-        expect(data).toHaveProperty("username", "jesse jacinto");
-        expect(data).toHaveProperty("user_type", "traveler");
+        expect(data).toHaveProperty("name", "jesse jacinto");
+        expect(data).toHaveProperty("role", "traveler");
       });
     });
   });

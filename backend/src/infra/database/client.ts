@@ -1,5 +1,5 @@
+import { envConfig } from "config/env.ts";
 import { Client, QueryConfig, QueryResultRow } from "pg";
-import { envConfig } from "envConfig.ts";
 
 async function query<R extends QueryResultRow = QueryResultRow>(
   queryObject: QueryConfig,

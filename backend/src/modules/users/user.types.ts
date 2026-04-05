@@ -1,8 +1,8 @@
 export type UserCreatedRow = {
   id: string;
   email: string;
-  username: string;
-  user_type: "driver" | "traveler";
+  name: string;
+  role: "driver" | "traveler";
   token_version: number;
   created_at: Date;
 };
@@ -10,17 +10,16 @@ export type UserCreatedRow = {
 export type UserRow = {
   id: string;
   email: string;
-  username: string;
-  hashed_password: string;
+  name: string;
+  password_hash: string;
   token_version: number;
 };
 
 export type CreateUserInput = {
-  username: string;
+  name: string;
   email: string;
-  hashed_password: string;
-  user_type: "driver" | "traveler";
-  extra_data?: Record<string, unknown>;
+  password_hash: string;
+  role: "driver" | "traveler";
 };
 
 export type UserAuthRow = Pick<

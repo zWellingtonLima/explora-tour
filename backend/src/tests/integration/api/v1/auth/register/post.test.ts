@@ -4,16 +4,16 @@ import { envConfig } from "config/env.ts";
 const api_url = `${envConfig.BASE_API_URL}/auth/register`;
 
 const createUser = {
-  user_type: "traveler",
-  username: "Jesse Jacinto",
+  role: "traveler",
+  name: "Jesse Jacinto",
   email: "traveler@testemail.com",
   password: "travelerpassword",
 };
 
 describe("POST /api/v1/auth/register", () => {
-  describe(`User: ${createUser.username}`, () => {
+  describe(`User: ${createUser.name}`, () => {
     describe("Creating an user", () => {
-      test(`A "${createUser.user_type}" user successfully`, async () => {
+      test(`A "${createUser.role}" user successfully`, async () => {
         const response = await fetch(api_url, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,13 +26,13 @@ describe("POST /api/v1/auth/register", () => {
         expect(data).toHaveProperty("accessToken");
         expect(typeof data.accessToken).toBe("string");
         expect(data).not.toHaveProperty("password");
-        expect(data).not.toHaveProperty("hashed_password");
+        expect(data).not.toHaveProperty("password_hash");
       });
 
-      test("An user_type not allowed", async () => {
+      test("A role not allowed", async () => {
         const driverWithoudRequiredInfo = {
-          user_type: "admin",
-          username: "Hacker",
+          role: "admin",
+          name: "Hacker",
           email: "user@withouthinfo.com",
           password: "12345678aa",
         };
@@ -47,14 +47,14 @@ describe("POST /api/v1/auth/register", () => {
 
         expect(response.status).toBe(400);
         expect(body.error).toHaveProperty("message", "Validation error");
-        expect(body.error.details).toHaveProperty("discriminator", "user_type");
+        expect(body.error.details).toHaveProperty("discriminator", "role");
       });
     });
 
     describe("Creating user with duplicate email", () => {
       const user = {
-        user_type: "traveler",
-        username: "Someone",
+        role: "traveler",
+        name: "Someone",
         email: "duplicate@test.com",
         password: "password123",
       };
@@ -81,8 +81,8 @@ describe("POST /api/v1/auth/register", () => {
     describe("Checking correct password hashing", () => {
       test("Is password stored hashed", async () => {
         const checkHashedPassUser = {
-          user_type: "traveler",
-          username: "Check Hash",
+          role: "traveler",
+          name: "Check Hash",
           email: "hash@test.com",
           password: "secretpass123",
         };
@@ -96,11 +96,11 @@ describe("POST /api/v1/auth/register", () => {
         expect(response.status).toBe(201);
 
         const result = await query({
-          text: "SELECT hashed_password FROM users WHERE email = $1;",
+          text: "SELECT password_hash FROM users WHERE email = $1;",
           values: ["hash@test.com"],
         });
 
-        const hash = result.rows[0].hashed_password;
+        const hash = result.rows[0].password_hash;
         expect(hash).not.toBe(checkHashedPassUser.password);
         expect(hash.length).toBeGreaterThan(20);
       });

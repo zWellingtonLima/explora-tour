@@ -12,7 +12,7 @@ import {
 
 async function findByEmail(email: string): Promise<UserRow | null> {
   const { rows } = await query({
-    text: `SELECT id, email, username, hashed_password, token_version
+    text: `SELECT id, email, name, password_hash, token_version
            FROM users WHERE email = $1 LIMIT 1`,
     values: [email.toLowerCase().trim()],
   });
@@ -21,7 +21,7 @@ async function findByEmail(email: string): Promise<UserRow | null> {
 
 async function findById(id: string): Promise<UserAuthRow | null> {
   const { rows } = await query({
-    text: `SELECT id, email, username, token_version
+    text: `SELECT id, email, name, token_version
            FROM users WHERE id = $1 LIMIT 1`,
     values: [id],
   });
@@ -31,7 +31,7 @@ async function findById(id: string): Promise<UserAuthRow | null> {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function findPublicById(id: string): Promise<PublicUser | null> {
   const { rows } = await query({
-    text: `SELECT id, email, username, user_type
+    text: `SELECT id, email, name, role
            FROM users WHERE id = $1 LIMIT 1`,
     values: [id],
   });
@@ -40,16 +40,15 @@ async function findPublicById(id: string): Promise<PublicUser | null> {
 
 async function create(data: CreateUserInput): Promise<UserCreatedRow> {
   const { rows } = await query({
-    text: `INSERT INTO users (id, user_type, username, email, hashed_password, extra_data)
-           VALUES ($1, $2, $3, $4, $5, $6)
-           RETURNING id, email, username, token_version`,
+    text: `INSERT INTO users (id, role, name, email, password_hash)
+           VALUES ($1, $2, $3, $4, $5)
+           RETURNING id, email, name, token_version`,
     values: [
       ulid(),
-      data.user_type,
-      data.username.toLowerCase(),
+      data.role,
+      data.name.toLowerCase(),
       data.email.toLowerCase().trim(),
-      data.hashed_password,
-      data.extra_data ?? {},
+      data.password_hash,
     ],
   });
   return rows[0] as UserCreatedRow;
